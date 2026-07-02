@@ -14,7 +14,7 @@
 | Resource | Link |
 | --- | --- |
 | Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
-| Paper | [PDF](https://zhude233.github.io/AnchorSplat/AnchorSplat_ECCV2026.pdf) |
+| Paper | [PDF](https://zhude233.github.io/AnchorSplat/docs/AnchorSplat_ECCV2026.pdf) |
 | Pretrained model | - |
 | Processed third-party datasets | - |
 | 3DGS-SR dataset | - |
