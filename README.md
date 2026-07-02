@@ -108,7 +108,39 @@ python inference_external.py \
   --normalization auto
 ```
 
-The PLY reader expects Inria-style 3DGS attributes: log-space `scale_*`, logit-space `opacity`, SH DC `f_dc_*`, optional `f_rest_*`, and quaternion `rot_*`. Coordinates are normalized internally to `[0, 1]^3`, scales are shifted by the same scalar factor, and the output is written back in the original input coordinate frame. See [docs/input_format.md](docs/input_format.md) for the exact contract and conversion formulas.
+The PLY reader expects Inria-style 3DGS attributes: log-space `scale_*`, logit-space `opacity`, SH DC `f_dc_*`, optional `f_rest_*`, and quaternion `rot_*`. Coordinates are normalized internally to `[0, 1]^3`, scales are shifted by the same scalar factor, and the output is written back in the original input coordinate frame.
+
+### Input Format
+
+Required PLY fields:
+
+```text
+x, y, z
+f_dc_0, f_dc_1, f_dc_2
+opacity
+scale_0, scale_1, scale_2
+rot_0, rot_1, rot_2, rot_3
+```
+
+Optional higher-order SH fields are supported as `f_rest_0, f_rest_1, ...`. If absent, they are padded with zeros to match `FeaturePredictor.sh_degree = 3`, enabling plug-and-play inference on sources that only export RGB or SH DC features.
+
+Attribute conventions:
+
+- `scale_0..2`: log-space Gaussian scales. If you have positive scales `sigma`, write `log(sigma)`.
+- `opacity`: logit-space opacity. If you have alpha in `[0, 1]`, write `log(alpha / (1 - alpha))` after clamping alpha away from 0 and 1.
+- `f_dc_0..2`: SH DC coefficients. If you have RGB in `[0, 1]`, convert with `f_dc = (rgb - 0.5) / 0.28209479177387814`.
+- `f_rest_*`: flattened non-DC SH coefficients in the common Inria 3DGS order.
+
+Coordinate normalization:
+
+```text
+means_norm = means * s + t
+scales_norm = log_scales + log(s)
+means_out = (means_norm_out - t) / s
+log_scales_out = scales_norm_out - log(s)
+```
+
+The output PLY is written back in the same coordinate frame as the input.
 
 ## 🗂️ Dataset Layout
 
