@@ -1,0 +1,37 @@
+FeaturePredictor.backbone_type = "PT"
+FeaturePredictor.sh_degree = 3 
+FeaturePredictor.output_head_nlayer = 4
+FeaturePredictor.output_head_type='mlp-relu'
+FeaturePredictor.max_scale_normalized = 1e-2 # Help stablize the training
+FeaturePredictor.grid_resolution = 384
+FeaturePredictor.resume_ckpt = None
+FeaturePredictor.output_features_type = 'res'
+FeaturePredictor.input_features = ['means','scales', 'opacities', 'quats', 'features_dc', 'features_rest']
+FeaturePredictor.output_features = ['means','scales', 'opacities', 'quats', 'features_dc', 'features_rest']
+FeaturePredictor.output_head_width = 128
+FeaturePredictor.zeroinit = True
+FeaturePredictor.predict_double_features = True
+FeaturePredictor.dropout = 0.0
+FeaturePredictor.binocular = False
+FeaturePredictor.point_multiply_factor = 20
+FeaturePredictor.anchor_offset_scale = 0.015
+ 
+
+FeaturePredictor.res_feature_activation = {
+    "means":  @Tanh(),
+    "features_dc": @Identity(),
+    "features_rest": @Identity(),
+    "scales": @Identity(),
+    "opacities": @Identity(),
+    "quats": @Identity()
+}
+
+FeaturePredictor.input_embed_to_mlp = False
+FeaturePredictor.input_feat_to_mlp = True
+
+PointTransformerV3Model.enable_flash = True
+PointTransformerV3Model.output_dim = 96
+PointTransformerV3Model.enc_dim = 64
+PointTransformerV3Model.turn_off_bn = False
+PointTransformerV3Model.stride = (1,2,2,2)
+PointTransformerV3Model.embedding_type = 'MLP'

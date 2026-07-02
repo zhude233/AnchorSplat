@@ -1,0 +1,34 @@
+SplatfactoDataset.remove_outlier_ndevs=-1
+SplatfactoDataset.image_per_scene = None # Only used for train_dataset
+SplatfactoDataset.sample_ratio_test = None # Only used for train_dataset
+SplatfactoDataset.max_gs_num = 1000000
+SplatfactoDataset.load_pose_src = 'colmap'
+SplatfactoDataset.low_resolution = 256
+SplatfactoDataset.high_resolution = 1024
+SplatfactoDataset.input_ckpt_step = 14999
+
+collate_fn = @GS_collate_fn
+build_trainloader.batch_size = 1
+build_trainloader.accumulate_step = 1
+build_trainloader.num_workers = 16
+build_trainloader.collate_fn = %collate_fn
+train_dataset/SplatfactoDataset.train_or_test = 'train'
+train_dataset/SplatfactoDataset.nerfstudio_folder = ''
+train_dataset/SplatfactoDataset.colmap_folder = ''
+train_dataset/SplatfactoDataset.dataset_folder = 'data/3dgs-sr/train'
+train_dataset/SplatfactoDataset.image_per_scene = 4
+train_dataset/SplatfactoDataset.sample_ratio_test = 1
+train_dataset/SplatfactoDataset.cache_steps = 5
+train_dataset/SplatfactoDataset.cache_num_scenes = 10
+train_dataset/SplatfactoDataset.split_across_gpus = True
+
+build_testloader.batch_size = 1
+build_testloader.num_workers = 0
+build_testloader.collate_fn = %collate_fn
+test_dataset/SplatfactoDataset.train_or_test = 'test'
+test_dataset/SplatfactoDataset.nerfstudio_folder = 'mvimgnet_sg4x_splatformer_ready'
+test_dataset/SplatfactoDataset.colmap_folder = 'mvimgnet_sg4x_splatformer_ready'
+test_dataset/SplatfactoDataset.dataset_folder = 'data/mvimgnet_sg4x_splatformer_ready'
+test_dataset/SplatfactoDataset.cache_steps = 1
+test_dataset/SplatfactoDataset.cache_num_scenes = 1
+test_dataset/SplatfactoDataset.split_across_gpus = False

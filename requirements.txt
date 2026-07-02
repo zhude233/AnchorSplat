@@ -1,0 +1,30 @@
+absl-py
+addict
+einops
+gin-config
+gsplat
+h5py
+lpips
+matplotlib
+nerfacc
+numpy
+opencv-python
+pillow
+plyfile
+pyyaml
+scipy
+tensorboard
+tensorboardX
+termcolor
+timm
+tqdm
+wandb
+
+# CUDA/PyTorch-extension packages are environment-specific. Install versions
+# matching your local PyTorch and CUDA builds.
+fused-ssim
+spconv-cu118
+torch-cluster
+torch-geometric
+torch-scatter
+torch-sparse

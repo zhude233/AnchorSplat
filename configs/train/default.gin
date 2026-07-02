@@ -1,0 +1,71 @@
+set_seed.seed = 918
+total_steps = 200000
+training.total_steps = %total_steps
+training.pretrain_steps = 0
+training.eval_interval = 1000 
+training.save_interval = 10000
+training.log_interval = 20
+training.log_image_interval = 1000
+training.grad_clip_norm = 2.0
+training.resume_from_step = 0
+training.enable_amp = True
+training.lpips_loss_weight = 0.3
+
+training.means_loss_weight = 0.0
+training.laplace_loss_weight = 0.0
+training.log_loss_weight = 0.0
+
+training.ssim_loss_weight = 0.0
+training.image_l1_loss_weight = 1.0
+training.log_image_interval = 2000
+training.eval_interval = 2000
+training.save_interval = 2000
+training.eval_step = 300000
+
+training.dropout_rate = 0.1
+training.means_rate = 0.05
+training.scales_rate =0.05
+training.opacities_rate =0.05
+training.quats_rate =0.05
+training.features_dc_rate =0.05
+training.features_rest_rate =0.05
+training.offset_rate = 0.005
+
+
+pretrain/build_optimizer.lr_dict = {
+    "base": 1e-3, #Useless
+    "embedding": 1e-3, 
+    "backbone": 1e-3,
+    "features_dc": 1e-3,
+    "features_rest": 5e-5,
+    "scales": 1e-3,
+    "opacities": 1e-3,
+    "quats": 1e-3,
+    "means": 1e-3
+}
+pretrain/build_optimizer.optimizer_type = 'adam'
+pretrain/build_optimizer.optimizer_params = {'eps': 1e-15}
+pretrain/build_scheduler.total_step = %total_steps
+pretrain/build_scheduler.schedule = 'constant'
+
+
+#Update 
+train2D/build_optimizer.lr_dict = {
+    "base": 3e-6, #Useless
+    "embedding": 3e-6,
+    "backbone": 3e-6,
+    "features_dc": 3e-6,
+    "features_rest": 1.5e-7,
+    "scales": 3e-6,
+    "opacities": 3e-6,
+    "quats": 3e-6,
+    "means": 3e-7
+}
+train2D/build_optimizer.optimizer_type = 'adam'
+train2D/build_optimizer.optimizer_params = {'eps': 1e-15}
+train2D/build_scheduler.total_step = %total_steps
+train2D/build_scheduler.schedule = 'constant'
+
+build_trainloader.accumulate_step = 1
+build_trainloader.num_workers = 6
+build_trainloader.batch_size = 1

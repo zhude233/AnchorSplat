@@ -1,0 +1,41 @@
+name: anchorsplat
+channels:
+  - pytorch
+  - nvidia
+  - pyg
+  - conda-forge
+dependencies:
+  - python=3.8.20
+  - pip
+  - pytorch=2.1.2
+  - torchvision=0.16.2
+  - pytorch-cuda=11.8
+  - pip:
+      - --find-links https://data.pyg.org/whl/torch-2.1.0+cu118.html
+      - absl-py==2.3.0
+      - addict==2.4.0
+      - einops==0.8.1
+      - git+https://github.com/rahul-goel/fused-ssim@328dc9836f513d00c4b5bc38fe30478b4435cbb5
+      - gin-config==0.5.0
+      - git+https://github.com/nerfstudio-project/gsplat.git@2ddee2a7d62d079dc2e169b5aca86c795db9753e
+      - h5py==3.11.0
+      - lpips==0.1.4
+      - matplotlib==3.7.5
+      - nerfacc==0.5.3
+      - numpy==1.24.1
+      - opencv-python==4.11.0.86
+      - pillow==10.2.0
+      - plyfile==1.0.3
+      - PyYAML==6.0.2
+      - scipy==1.10.1
+      - spconv-cu118==2.3.6
+      - tensorboard==2.14.0
+      - tensorboardX==2.6.2.2
+      - termcolor==2.4.0
+      - timm==1.0.15
+      - torch-cluster==1.6.3
+      - torch-geometric==2.6.1
+      - torch-scatter==2.1.2
+      - torch-sparse==0.6.18
+      - tqdm==4.67.1
+      - wandb==0.20.1

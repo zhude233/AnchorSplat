@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environments and editor state
+.env
+.venv/
+env/
+venv/
+.vscode/
+.idea/
+
+# Experiment outputs and local data
+data/
+outputs/
+checkpoints/
+wandb/
+wandb_logs/
+logs/
+debug_render/
+debug_images/
+low_psnr_images/
+
+# Large model and 3D asset files
+*.ckpt
+*.pth
+*.pt
+*.ply
+!examples/
+!examples/*.ply
+*.splat
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Generated media and metrics
+*.log
+*.mp4
+*.mov
+*.npy
+*.npz
+
+# Project page draft assets are kept local until the page is ready.
+docs/assets/
+docs/index.html
+docs/PROJECT_PAGE.md
+docs/.nojekyll
+docs/robots.txt
+tools/build_project_page_eval_videos.py
+
+# Third-party source trees users may clone locally
+third_party/
