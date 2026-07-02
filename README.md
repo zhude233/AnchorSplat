@@ -1,28 +1,30 @@
 # AnchorSplat
 
+✨ **ECCV 2026 Code Release** · ⚡ **20x Anchor Expansion** · 🧩 **Source-Free 3DGS Super-Resolution**
+
 Official code release for **AnchorSplat: Fast and Structure Consistent Detail Synthesis for Gaussian Splatting**.
 
 AnchorSplat upsamples coarse 3D Gaussian Splatting assets by predicting structured anchor offsets and residual Gaussian attributes. The default released configuration uses a 20x anchor expansion and a Point Transformer V3 backbone.
 
 This repository hosts the ECCV 2026 code release. Large assets such as datasets, pretrained checkpoints, generated point clouds, logs, and evaluation outputs are intentionally excluded from git.
 
-## News
+## 🔥 News
 
-- **2026-07-02**: Released training code.
-- **2026-07-02**: Released evaluation code.
-- **2026-07-02**: Released inference code and demo.
+- ✅ **2026-07-02**: Release training code.
+- ✅ **2026-07-02**: Release evaluation code.
+- ✅ **2026-07-02**: Release inference code and demo.
 
-## Release TODO
+## 📌 Release TODO
 
-- [x] Release training code
-- [x] Release evaluation code
-- [x] Release inference code and demo
-- [ ] Release pretrained model
-- [ ] Release processed third-party datasets
-- [ ] Release 3DGS-SR dataset
-- [ ] Release project page
+- ✅ Release training code
+- ✅ Release evaluation code
+- ✅ Release inference code and demo
+- ⏳ Release pretrained model
+- ⏳ Release processed third-party datasets
+- ⏳ Release 3DGS-SR dataset
+- ⏳ Release project page
 
-## Installation
+## 🛠️ Installation
 
 The code is tested around PyTorch, CUDA extension packages, Pointcept, and gsplat. Exact wheels depend on your CUDA and PyTorch versions.
 
@@ -55,7 +57,7 @@ If CUDA extension packages fail to install from `requirements.txt`, install vers
 - `fused-ssim`
 - optional `flash-attn` if you keep `PointTransformerV3Model.enable_flash = True`
 
-## Pretrained Checkpoints
+## 📦 Pretrained Checkpoints
 
 Place the released checkpoint at:
 
@@ -71,7 +73,7 @@ ad05f8b965c002c1f62cea53e4ce10ed4804bbc433375afa5f411f236d1b79a3
 
 You can override this path in all scripts with the `WEIGHTS` or `CHECKPOINT` environment variables.
 
-## Inference On External PLY Files
+## ⚡ Inference On External PLY Files
 
 AnchorSplat includes a lightweight inference path for Gaussian PLY files exported by LGM-style or Trellis-style pipelines.
 
@@ -98,7 +100,7 @@ python inference_external.py \
 
 The PLY reader expects Inria-style 3DGS attributes: log-space `scale_*`, logit-space `opacity`, SH DC `f_dc_*`, optional `f_rest_*`, and quaternion `rot_*`. Coordinates are normalized internally to `[0, 1]^3`, scales are shifted by the same scalar factor, and the output is written back in the original input coordinate frame. See [docs/input_format.md](docs/input_format.md) for the exact contract and conversion formulas.
 
-## Dataset Layout
+## 🗂️ Dataset Layout
 
 Training expects each scene to contain a low-resolution input 3DGS checkpoint and high-resolution target views:
 
@@ -131,7 +133,7 @@ train_dataset/SplatfactoDataset.dataset_folder = 'data/3dgs-sr/train'
 test_dataset/SplatfactoDataset.dataset_folder = 'data/3dgs-sr/test'
 ```
 
-## Training
+## 🏋️ Training
 
 The main training script is DDP-based. The default script launches 8 processes:
 
@@ -160,7 +162,7 @@ The default W&B mode is disabled for open-source runs. Enable online logging wit
 python train.py --disable_wandb=false ...
 ```
 
-## Evaluation
+## 📊 Evaluation
 
 Run evaluation with a checkpoint:
 
@@ -172,7 +174,7 @@ bash scripts/evaluate_anchorsplat.sh
 
 Outputs are written under `outputs/` and include rendered comparisons, per-rank metric files, and an evaluation log.
 
-## Dataset Preparation Tools
+## 🧰 Dataset Preparation Tools
 
 The `tools/` directory contains helper scripts used during internal data conversion and low-resolution 3DGS preparation:
 
@@ -185,7 +187,7 @@ The `tools/` directory contains helper scripts used during internal data convers
 
 These tools use relative defaults under `data/` and `third_party/`. Some require external projects such as gsplat, COLMAP preprocessing scripts, or SuperGaussian. Keep those dependencies outside git, for example under `third_party/`.
 
-## Repository Structure
+## 🧭 Repository Structure
 
 ```text
 configs/              Gin configs for data, model, and training
@@ -198,10 +200,10 @@ train.py              DDP training and evaluation entrypoint
 inference_external.py External PLY inference entrypoint
 ```
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 This code builds on ideas and components from SplatFormer, Pointcept, gsplat, PyTorch Geometric, and 3D Gaussian Splatting tooling. Please also follow the licenses of all third-party dependencies you install locally.
 
-## License
+## 📄 License
 
 This repository is released under the MIT License. Third-party dependencies and datasets retain their original licenses.

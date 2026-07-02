@@ -2,6 +2,6 @@
 
 ## Unreleased
 
-- Released training code.
-- Released evaluation code.
-- Released inference code and demo.
+- ✅ Release training code.
+- ✅ Release evaluation code.
+- ✅ Release inference code and demo.
