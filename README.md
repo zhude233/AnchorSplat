@@ -2,6 +2,12 @@
 
 ✨ **ECCV 2026 Code Release** · ⚡ **Fast** · 🌍 **Generalizable** · 🔌 **Plug-and-Play**
 
+[![Paper](https://img.shields.io/badge/Paper-PDF-b31b1b?logo=adobeacrobatreader&logoColor=white)](docs/AnchorSplat_ECCV2026.pdf)
+[![Code](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/zhude233/AnchorSplat)
+[![Model](https://img.shields.io/badge/Model-coming%20soon-yellow?logo=huggingface)](#-resources)
+[![Data](https://img.shields.io/badge/Data-coming%20soon-blue?logo=huggingface)](#-resources)
+[![Project Page](https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome)](#-resources)
+
 Official code release for **AnchorSplat**.
 
 AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low-quality 3D Gaussian Splatting assets. Given only a coarse 3DGS model, it synthesizes detail-rich Gaussian primitives directly in 3D with a single network forward pass, avoiding the slow render-SR-reoptimize pipeline used by 2D-centric 3DGS super-resolution methods.
