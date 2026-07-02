@@ -1,17 +1,17 @@
 # AnchorSplat: Fast and Structure Consistent Detail Synthesis for Gaussian Splatting (ECCV 2026)
 
-✨ **ECCV 2026 Code Release** · ⚡ **Fast Feed-Forward Enhancement** · 🧩 **Source-Free 3DGS Detail Synthesis**
+✨ **ECCV 2026 Code Release** · ⚡ **Fast** · 🌍 **Generalizable** · 🔌 **Plug-and-Play**
 
 Official code release for **AnchorSplat**.
 
-AnchorSplat is a fast, source-free method for enhancing low-quality 3D Gaussian Splatting assets. Given only a coarse 3DGS model, it synthesizes detail-rich Gaussian primitives directly in 3D with a single network forward pass, avoiding the slow render-SR-reoptimize pipeline used by 2D-centric 3DGS super-resolution methods.
+AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low-quality 3D Gaussian Splatting assets. Given only a coarse 3DGS model, it synthesizes detail-rich Gaussian primitives directly in 3D with a single network forward pass, avoiding the slow render-SR-reoptimize pipeline used by 2D-centric 3DGS super-resolution methods.
 
 ## ✨ Highlights
 
 - ⚡ **Fast**: feed-forward 3D-native enhancement without per-scene optimization.
-- 🧩 **Source-free**: no original multi-view training images are required at inference time.
-- 🎯 **Structure-consistent**: local point anchors keep generated details aligned with the input geometry.
+- 🌍 **Generalizable**: transfers to unseen 3DGS assets, including inputs with SH settings not seen during training.
 - 🔌 **Plug-and-play**: supports external 3DGS PLY inputs with explicit normalization and coordinate restoration.
+- 🎯 **Structure-consistent**: local point anchors keep generated details aligned with the input geometry.
 
 This repository hosts the ECCV 2026 code release. Large assets such as datasets, pretrained checkpoints, generated point clouds, logs, and evaluation outputs are intentionally excluded from git.
 
