@@ -13,7 +13,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - 🔌 **Plug-and-play**: supports external 3DGS PLY inputs with explicit normalization and coordinate restoration.
 - 🎯 **Structure-consistent**: local point anchors keep generated details aligned with the input geometry.
 
-This repository hosts the ECCV 2026 code release. Large assets such as datasets, pretrained checkpoints, generated point clouds, logs, and evaluation outputs are intentionally excluded from git.
+We are releasing the code first, with pretrained models and datasets to follow. Large artifacts will be hosted separately and linked here.
 
 ## 🔥 News
 
