@@ -19,6 +19,16 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ **2026-07-02**: Release evaluation code.
 - ✅ **2026-07-02**: Release inference code and demo.
 
+## 📌 Release TODO
+
+- ✅ Release training code
+- ✅ Release evaluation code
+- ✅ Release inference code and demo
+- ⬜ Release pretrained model
+- ⬜ Release processed third-party datasets
+- ⬜ Release 3DGS-SR dataset
+- ⬜ Release project page
+
 ## 🔗 Resources
 
 | Resource | Link |
