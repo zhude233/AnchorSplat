@@ -13,23 +13,21 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - 🔌 **Plug-and-play**: supports external 3DGS PLY inputs with explicit normalization and coordinate restoration.
 - 🎯 **Structure-consistent**: local point anchors keep generated details aligned with the input geometry.
 
-We are releasing the code first, with pretrained models and datasets to follow. Large artifacts will be hosted separately and linked here.
-
 ## 🔥 News
 
 - ✅ **2026-07-02**: Release training code.
 - ✅ **2026-07-02**: Release evaluation code.
 - ✅ **2026-07-02**: Release inference code and demo.
 
-## 📌 Release TODO
+## 🔗 Resources
 
-- ✅ Release training code
-- ✅ Release evaluation code
-- ✅ Release inference code and demo
-- ⏳ Release pretrained model
-- ⏳ Release processed third-party datasets
-- ⏳ Release 3DGS-SR dataset
-- ⏳ Release project page
+| Resource | Link |
+| --- | --- |
+| Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
+| Pretrained model | - |
+| Processed third-party datasets | - |
+| 3DGS-SR dataset | - |
+| Project page | - |
 
 ## 🛠️ Installation
 
@@ -64,25 +62,11 @@ If CUDA extension packages fail to install from `requirements.txt`, install vers
 - `fused-ssim`
 - optional `flash-attn` if you keep `PointTransformerV3Model.enable_flash = True`
 
-## 📦 Pretrained Checkpoints
-
-Place the released checkpoint at:
-
-```text
-checkpoints/anchorsplat_20x.pth
-```
-
-Expected SHA256 for the current 20x checkpoint:
-
-```text
-ad05f8b965c002c1f62cea53e4ce10ed4804bbc433375afa5f411f236d1b79a3
-```
-
-You can override this path in all scripts with the `WEIGHTS` or `CHECKPOINT` environment variables.
-
 ## ⚡ Inference On External PLY Files
 
 AnchorSplat includes a lightweight inference path for Gaussian PLY files exported by LGM-style or Trellis-style pipelines.
+
+Place the downloaded checkpoint at `checkpoints/anchorsplat_20x.pth`, or set `WEIGHTS` to a custom path.
 
 ```bash
 WEIGHTS=checkpoints/anchorsplat_20x.pth \
