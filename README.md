@@ -1,8 +1,8 @@
-# AnchorSplat
+# AnchorSplat: Fast and Structure Consistent Detail Synthesis for Gaussian Splatting (ECCV 2026)
 
 ✨ **ECCV 2026 Code Release** · ⚡ **20x Anchor Expansion** · 🧩 **Source-Free 3DGS Super-Resolution**
 
-Official code release for **AnchorSplat: Fast and Structure Consistent Detail Synthesis for Gaussian Splatting**.
+Official code release for **AnchorSplat**.
 
 AnchorSplat upsamples coarse 3D Gaussian Splatting assets by predicting structured anchor offsets and residual Gaussian attributes. The default released configuration uses a 20x anchor expansion and a Point Transformer V3 backbone.
 
