@@ -2,7 +2,7 @@
 
 set -u
 
-ROOT="data/mvimgnet_splatformer_ready"
+ROOT="data/mvimgnet_lowres_3dgs"
 GPU="0"
 SCENE_LIMIT=""
 SCENE_LIST=""
@@ -19,7 +19,7 @@ SKIP_REWRITE_BINS=0
 
 usage() {
   cat <<'EOF'
-Usage: bash tools/train_mvimgnet_splatformer_ready.sh [options]
+Usage: bash tools/train_mvimgnet_3dgs.sh [options]
 
 Options:
   --target-root PATH        Converted MVImgNet root.
@@ -38,7 +38,7 @@ Options:
                             Default: python third_party/gsplat/examples/simple_trainer.py default.
   --gsplat-args TEMPLATE    Extra gsplat args before required flags.
                             Default: --data_dir "{scene256}" --result_dir "{scene256}/gaussian_splatting"
-  --log-file PATH           Log file. Default: <target-root>/train_mvimgnet_splatformer_ready.log
+  --log-file PATH           Log file. Default: <target-root>/train_mvimgnet_3dgs.log
   --dry-run                 Print commands without running them.
   --skip-rewrite-bins       Do not rewrite sparse/0/*.bin from colmap_work text outputs.
   -h, --help                Show this help.
@@ -119,7 +119,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$LOG_FILE" ]]; then
-  LOG_FILE="${ROOT%/}/train_mvimgnet_splatformer_ready.log"
+  LOG_FILE="${ROOT%/}/train_mvimgnet_3dgs.log"
 fi
 
 mkdir -p "$(dirname "$LOG_FILE")"

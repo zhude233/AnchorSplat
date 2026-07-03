@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare SplatFormer layout that initializes gsplat from SuperGaussian xyz/rgb."""
+"""Prepare an AnchorSplat layout that initializes gsplat from SuperGaussian xyz/rgb."""
 
 from __future__ import annotations
 
@@ -21,8 +21,8 @@ from dataset import colmap_utils
 
 
 DEFAULT_SOURCE_ROOT = "data/mvimgnet_testset_500"
-DEFAULT_LAYOUT_ROOT = "data/mvimgnet_splatformer_ready"
-DEFAULT_OUTPUT_ROOT = "data/mvimgnet_xyzinit_splatformer_ready"
+DEFAULT_LAYOUT_ROOT = "data/mvimgnet_lowres_3dgs"
+DEFAULT_OUTPUT_ROOT = "data/mvimgnet_supergaussian_xyz_initialization"
 
 
 def parse_args() -> argparse.Namespace:

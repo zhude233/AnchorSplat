@@ -32,8 +32,8 @@ from collections import OrderedDict
 from models.feature_predictor import FeaturePredictor
 from utils.transform_utils import MinMaxScaler
 from utils import gs_utils
-import dataset.GS
-import dataset.Loader  # Register GS_collate_fn # Register SplatfactoDataset
+import dataset.gaussian_scene
+import dataset.loaders  # Register GaussianSceneDataset and gaussian_collate_fn
 
 # Default configuration
 DEFAULT_WEIGHTS = 'checkpoints/anchorsplat_20x.pth'

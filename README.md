@@ -35,7 +35,7 @@
   <a href="https://arxiv.org/abs/2607.01290"><img src="https://img.shields.io/badge/arXiv-2607.01290-b31b1b?logo=arxiv&logoColor=white" alt="arXiv"></a>
   <a href="https://github.com/zhude233/AnchorSplat"><img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"></a>
   <a href="https://huggingface.co/de233/AnchorSplat"><img src="https://img.shields.io/badge/Model-Hugging%20Face-yellow?logo=huggingface" alt="Model"></a>
-  <a href="#-resources"><img src="https://img.shields.io/badge/Data-coming%20soon-blue?logo=huggingface" alt="Data"></a>
+  <a href="https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data"><img src="https://img.shields.io/badge/Data-Hugging%20Face-blue?logo=huggingface" alt="Data"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome" alt="Project Page"></a>
 </p>
 
@@ -57,6 +57,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ **2026-07-02**: Release inference code and demo.
 - ✅ **2026-07-02**: Release paper PDF.
 - ✅ **2026-07-03**: Release pretrained models.
+- ✅ **2026-07-03**: Release processed third-party datasets.
 
 ## 📌 Release TODO
 
@@ -65,7 +66,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ Release inference code and demo
 - ✅ Release paper PDF
 - ✅ Release pretrained models
-- ⬜ Release processed third-party datasets
+- ✅ Release processed third-party datasets
 - ⬜ Release 3DGS-SR dataset
 - ⬜ Release project page
 
@@ -76,7 +77,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
 | Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
 | Pretrained models | [Hugging Face](https://huggingface.co/de233/AnchorSplat) |
-| Processed third-party datasets | - |
+| Processed third-party datasets | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data) |
 | 3DGS-SR dataset | - |
 | Project page | - |
 
@@ -251,11 +252,11 @@ data/3dgs-sr/test/<scene_name>/
 The defaults are configured in `configs/dataset/objaverse.gin`:
 
 ```gin
-SplatfactoDataset.low_resolution = 256
-SplatfactoDataset.high_resolution = 1024
-SplatfactoDataset.input_ckpt_step = 14999
-train_dataset/SplatfactoDataset.dataset_folder = 'data/3dgs-sr/train'
-test_dataset/SplatfactoDataset.dataset_folder = 'data/3dgs-sr/test'
+GaussianSceneDataset.low_resolution = 256
+GaussianSceneDataset.high_resolution = 1024
+GaussianSceneDataset.input_ckpt_step = 14999
+train_dataset/GaussianSceneDataset.dataset_folder = 'data/3dgs-sr/train'
+test_dataset/GaussianSceneDataset.dataset_folder = 'data/3dgs-sr/test'
 ```
 
 ## 🏋️ Training
@@ -294,12 +295,10 @@ python train.py --disable_wandb=false ...
 Evaluation requires the processed test set under `data/3dgs-sr/test` or a custom path set through Gin. Run evaluation with the matching checkpoint and multiply factor:
 
 ```bash
-# 20x.
 CHECKPOINT=checkpoints/anchorsplat_20x.pth \
 GPUS=0 NPROC=1 \
 bash scripts/evaluate_anchorsplat.sh
 
-# 1x.
 POINT_MULTIPLY_FACTOR=1 CHECKPOINT=checkpoints/anchorsplat_1x.pth \
 GPUS=0 NPROC=1 OUTPUT_DIR=outputs/eval_anchorsplat_1x \
 bash scripts/evaluate_anchorsplat.sh
@@ -307,13 +306,54 @@ bash scripts/evaluate_anchorsplat.sh
 
 Outputs are written under `outputs/` and include rendered comparisons, per-rank metric files, and an evaluation log.
 
+### MVImgNet Zero-Shot Evaluation
+
+The MVImgNet numbers in the ECCV 2026 rebuttal use the processed third-party split named `mvimgnet_supergaussian_4x_downsampled_lr`.
+
+```bash
+mkdir -p data/downloads
+huggingface-cli download de233/AnchorSplat-Processed-Third-Party-Data \
+  mvimgnet_supergaussian_4x_downsampled_lr.tar.zst \
+  --repo-type dataset \
+  --local-dir data/downloads
+
+mkdir -p data
+tar --zstd -xf data/downloads/mvimgnet_supergaussian_4x_downsampled_lr.tar.zst -C data
+```
+
+Then run:
+
+```bash
+CHECKPOINT=checkpoints/anchorsplat_20x.pth \
+DATA_CONFIG=configs/dataset/mvimgnet_supergaussian_4x_downsampled_lr.gin \
+GPUS=0 NPROC=1 OUTPUT_DIR=outputs/eval_mvimgnet_20x \
+bash scripts/evaluate_anchorsplat.sh
+
+POINT_MULTIPLY_FACTOR=1 CHECKPOINT=checkpoints/anchorsplat_1x.pth \
+DATA_CONFIG=configs/dataset/mvimgnet_supergaussian_4x_downsampled_lr.gin \
+GPUS=0 NPROC=1 OUTPUT_DIR=outputs/eval_mvimgnet_1x \
+bash scripts/evaluate_anchorsplat.sh
+```
+
+Reported metrics on 15 held-out MVImgNet scenes:
+
+| Method | Budget | PSNR | SSIM | LPIPS |
+| --- | ---: | ---: | ---: | ---: |
+| 3DGS input | 71.4K | 22.19 | 0.732 | 0.241 |
+| AnchorSplat-1x | 71.4K | 26.42 | 0.847 | 0.199 |
+| AnchorSplat-20x | 1.43M | 27.36 | 0.862 | 0.192 |
+
+Small last-digit differences can appear across CUDA/gsplat environments.
+
+The ordinary SuperGaussian 4x processed input is a different package and does not reproduce this rebuttal table.
+
 ## 🧰 Dataset Preparation Tools
 
 The `tools/` directory contains helper scripts used during internal data conversion and low-resolution 3DGS preparation:
 
-- `tools/convert_3dgs_ply_to_splatformer_ckpt.py`
-- `tools/prepare_mvimgnet_splatformer_ready.py`
-- `tools/train_mvimgnet_splatformer_ready.sh`
+- `tools/convert_3dgs_ply_to_gsplat_ckpt.py`
+- `tools/prepare_mvimgnet_layout.py`
+- `tools/train_mvimgnet_3dgs.sh`
 - `tools/prepare_mvimgnet_lowres_3dgs.py`
 - `tools/train_mvimgnet_lowres_3dgs.sh`
 - `tools/rewrite_colmap_bins_legacy.py`

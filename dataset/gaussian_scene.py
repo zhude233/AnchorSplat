@@ -21,11 +21,9 @@ from .normalize import (
 )
 
 @gin.configurable
-class SplatfactoDataset(torch.utils.data.IterableDataset):
+class GaussianSceneDataset(torch.utils.data.IterableDataset):
     def __init__(self, 
                  train_or_test,
-                 nerfstudio_folder,
-                 colmap_folder,
                  dataset_folder,
                  load_pose_src, #[colmap or nerfstudio]
                  sample_ratio_test: Optional[float],
@@ -48,30 +46,23 @@ class SplatfactoDataset(torch.utils.data.IterableDataset):
         self.high_resolution = str(high_resolution)
         self.input_ckpt_step = input_ckpt_step
         
-        # self.nerfstudio_folders = sorted([os.path.join(nerfstudio_folder, ls, 'splatfacto') for ls in os.listdir(nerfstudio_folder)]) 
-        # if colmap_folder.endswith('.txt'):
-        #     self.colmap_folders = [os.path.join(colmap_path, ls) for ls in open(colmap_folder).read().splitlines()]
-        # elif os.path.isdir(colmap_folder):
-        #     self.colmap_folders = sorted([os.path.join(colmap_folder, ls) for ls in os.listdir(colmap_folder)])
-        
-        
         resolution_list = [[self.low_resolution, self.high_resolution]]
         ckpt_name = f'ckpt_{self.input_ckpt_step}_rank0.pt'
-        self.nerfstudio_folders = []
-        self.colmap_folders = []
+        self.input_gaussian_folders = []
+        self.target_view_folders = []
         dataset_list = sorted(os.listdir(dataset_folder))
         for ls in dataset_list:
             for i in range(len(resolution_list)):
                 if os.path.exists(os.path.join(dataset_folder, ls, f'{resolution_list[i][0]}','gaussian_splatting','ckpts', ckpt_name)):
                     if os.path.exists(os.path.join(dataset_folder, ls, f'{resolution_list[i][1]}')):
                         if os.path.exists(os.path.join(dataset_folder, ls, f'{resolution_list[i][1]}', 'images.txt')) and os.path.getsize(os.path.join(dataset_folder, ls, f'{resolution_list[i][1]}', 'images.txt')) > 0:
-                            self.nerfstudio_folders.append(os.path.join(dataset_folder, ls, f'{resolution_list[i][0]}','gaussian_splatting'))
-                            self.colmap_folders.append(os.path.join(dataset_folder, ls, f'{resolution_list[i][1]}'))
+                            self.input_gaussian_folders.append(os.path.join(dataset_folder, ls, f'{resolution_list[i][0]}','gaussian_splatting'))
+                            self.target_view_folders.append(os.path.join(dataset_folder, ls, f'{resolution_list[i][1]}'))
                         else:
                             print(f'Warning: {os.path.join(dataset_folder, ls, f"{resolution_list[i][1]}", "images.txt")} does not exist or is empty')
 
-        assert len(self.nerfstudio_folders) == len(self.colmap_folders), 'The number of folders in nerfstudio and colmap should be the same'
-        self.folders = list(zip(self.nerfstudio_folders, self.colmap_folders))
+        assert len(self.input_gaussian_folders) == len(self.target_view_folders), 'The number of input Gaussian and target view folders should be the same'
+        self.folders = list(zip(self.input_gaussian_folders, self.target_view_folders))
         self.unlocked_scene_indices = list(range(len(self.folders)))
         self.unlocked_scene_num = len(self.folders)
         self.increment_steps = 0

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert a 3DGS-format PLY into a SplatFormer gsplat checkpoint."""
+"""Convert a 3DGS-format PLY into an AnchorSplat gsplat checkpoint."""
 
 from __future__ import annotations
 
@@ -28,14 +28,11 @@ def parse_args() -> argparse.Namespace:
             "256/gaussian_splatting/ckpts/ckpt_<step>_rank0.pt."
         ),
     )
-    parser.add_argument("--scene-dir", help="Optional SplatFormer scene dir used to derive the default output path.")
-    parser.add_argument(
-        "--splatformer-scene-root",
-        help="Preferred alias for --scene-dir; destination SplatFormer scene root.",
-    )
+    parser.add_argument("--scene-dir", help="Optional AnchorSplat scene dir used to derive the default output path.")
+    parser.add_argument("--scene-root", help="Preferred alias for --scene-dir; destination AnchorSplat scene root.")
     parser.add_argument(
         "--copy-layout-from",
-        help="Optional existing SplatFormer-ready scene root to copy 256/1024 layout from before writing the ckpt.",
+        help="Optional existing AnchorSplat-style scene root to copy 256/1024 layout from before writing the ckpt.",
     )
     parser.add_argument(
         "--allow-square-layout-copy",
@@ -91,7 +88,7 @@ def convert_dc(vertex: np.ndarray, mode: str) -> torch.Tensor:
     f_dc = stack_fields(vertex, ["f_dc_0", "f_dc_1", "f_dc_2"])
     if mode == "supergaussian-fork":
         # The fork renders GaussianModel.get_features as tanh(_features_dc) * 1/C0/2.
-        # SplatFormer/gsplat expects SH coefficients, so bake that activation here.
+        # The gsplat checkpoint stores SH coefficients, so bake that activation here.
         f_dc = torch.tanh(f_dc) * SUPERGAUSSIAN_DC_SCALE
     return f_dc.reshape(f_dc.shape[0], 1, 3)
 
@@ -199,9 +196,9 @@ def reject_square_layout_copy(src_scene: Path, allow_square_layout_copy: bool) -
         return
     resolved = src_scene.expanduser().resolve()
     lower_path = str(resolved).lower()
-    if "sg4x" in lower_path:
+    if "supergaussian_4x" in lower_path:
         raise ValueError(
-            "--copy-layout-from points to a path containing 'sg4x', which is likely a "
+            "--copy-layout-from points to a SuperGaussian 4x path, which is likely a "
             "SuperGaussian square-render layout. Pass --allow-square-layout-copy only if this is intentional."
         )
 
@@ -214,7 +211,7 @@ def reject_square_layout_copy(src_scene: Path, allow_square_layout_copy: bool) -
             )
 
 
-def copy_splatformer_layout(src_scene: Path, dst_scene: Path) -> List[str]:
+def copy_eval_layout(src_scene: Path, dst_scene: Path) -> List[str]:
     src_scene = src_scene.expanduser().resolve()
     dst_scene = dst_scene.expanduser().resolve()
     if src_scene == dst_scene:
@@ -234,7 +231,7 @@ def copy_splatformer_layout(src_scene: Path, dst_scene: Path) -> List[str]:
     for rel in required:
         src = src_scene / rel
         if not src.exists():
-            raise FileNotFoundError(f"Missing required SplatFormer layout path: {src}")
+            raise FileNotFoundError(f"Missing required AnchorSplat layout path: {src}")
         copy_path(src, dst_scene / rel)
         copied.append(rel)
 
@@ -247,10 +244,12 @@ def copy_splatformer_layout(src_scene: Path, dst_scene: Path) -> List[str]:
 
 
 def resolve_scene_root(args: argparse.Namespace) -> Optional[Path]:
-    scene_dir = args.splatformer_scene_root or args.scene_dir
-    if args.splatformer_scene_root and args.scene_dir:
-        if Path(args.splatformer_scene_root).expanduser().resolve() != Path(args.scene_dir).expanduser().resolve():
-            raise ValueError("--scene-dir and --splatformer-scene-root point to different destinations")
+    scene_dir = args.scene_root or args.scene_dir
+    provided = [p for p in (args.scene_root, args.scene_dir) if p]
+    if len(provided) > 1:
+        resolved = {str(Path(p).expanduser().resolve()) for p in provided}
+        if len(resolved) != 1:
+            raise ValueError("--scene-root and --scene-dir point to different destinations")
     return Path(scene_dir).expanduser().resolve() if scene_dir else None
 
 
@@ -259,7 +258,7 @@ def resolve_output(args: argparse.Namespace) -> Path:
         return Path(args.output).expanduser().resolve()
     scene_root = resolve_scene_root(args)
     if scene_root is None:
-        raise ValueError("pass --output or --splatformer-scene-root/--scene-dir")
+        raise ValueError("pass --output or --scene-root/--scene-dir")
     return scene_root / "256" / "gaussian_splatting" / "ckpts" / f"ckpt_{args.step}_rank0.pt"
 
 
@@ -274,9 +273,9 @@ def main() -> int:
     if args.copy_layout_from:
         scene_root = resolve_scene_root(args)
         if scene_root is None:
-            raise ValueError("--copy-layout-from requires --splatformer-scene-root/--scene-dir")
+            raise ValueError("--copy-layout-from requires --scene-root/--scene-dir")
         reject_square_layout_copy(Path(args.copy_layout_from), args.allow_square_layout_copy)
-        copied_layout = copy_splatformer_layout(Path(args.copy_layout_from), scene_root)
+        copied_layout = copy_eval_layout(Path(args.copy_layout_from), scene_root)
 
     output.parent.mkdir(parents=True, exist_ok=True)
     torch.save({"step": int(args.step), "splats": splats}, output)
@@ -286,7 +285,7 @@ def main() -> int:
         "output": str(output),
         "step": int(args.step),
         "dc_mode": args.dc_mode,
-        "splatformer_scene_root": str(resolve_scene_root(args)) if resolve_scene_root(args) is not None else None,
+        "scene_root": str(resolve_scene_root(args)) if resolve_scene_root(args) is not None else None,
         "copy_layout_from": str(Path(args.copy_layout_from).expanduser().resolve()) if args.copy_layout_from else None,
         "allow_square_layout_copy": bool(args.allow_square_layout_copy),
         "copied_layout": copied_layout,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare one sg4x scene whose low-res input is downsampled from GT-HR renders."""
+"""Prepare one SuperGaussian 4x scene with downsampled low-resolution input."""
 
 from __future__ import annotations
 
@@ -14,11 +14,11 @@ from PIL import Image
 
 
 DEFAULT_LAYOUT_SCENE = (
-    "data/mvimgnet_sg4x_splatformer_ready/0__0000f9c2"
+    "data/mvimgnet_supergaussian_4x/0__0000f9c2"
 )
 DEFAULT_SOURCE_SCENE = "data/mvimgnet_testset_500/0/0000f9c2"
 DEFAULT_OUTPUT_ROOT = (
-    "data/mvimgnet_sg4x_gtlr_splatformer_single"
+    "data/mvimgnet_supergaussian_4x_downsampled_lr_single"
 )
 DEFAULT_SCENE_NAME = "0__0000f9c2"
 IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".PNG", ".JPG", ".JPEG")
@@ -28,7 +28,7 @@ REQUIRED_SPARSE_FILES = ("cameras.bin", "images.bin", "points3D.bin")
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Copy an existing sg4x SplatFormer scene layout, but replace 256/images "
+            "Copy an existing SuperGaussian 4x scene layout, but replace 256/images "
             "with 64x64 bilinear downsampled HR_131072_gaussian renders."
         )
     )
@@ -258,7 +258,7 @@ def prepare_scene(args: argparse.Namespace) -> dict[str, Any]:
             "first_image": low_images[0] if low_images else None,
         },
         "target_generation": {
-            "source": "copied from existing sg4x layout 1024/images",
+            "source": "copied from existing SuperGaussian 4x layout 1024/images",
             "target_size": [args.high_size, args.high_size],
         },
         "validation": validation,

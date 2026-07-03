@@ -25,13 +25,19 @@ from dataset import colmap_utils  # noqa: E402
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--scene-dir", required=True, help="Prepared MVImgNet low-res 3DGS scene dir.")
-    parser.add_argument("--ckpt", help="Optional converted SplatFormer ckpt to validate.")
-    parser.add_argument("--splatformer-scene-root", help="Optional SplatFormer scene root to validate.")
+    parser.add_argument("--ckpt", help="Optional converted gsplat checkpoint to validate.")
+    parser.add_argument(
+        "--eval-scene-root",
+        dest="eval_scene_root",
+        metavar="EVAL_SCENE_ROOT",
+        help="Optional AnchorSplat eval scene root to validate.",
+    )
     parser.add_argument("--prepare-summary", help="Optional prepare_mvimgnet_lowres_3dgs.py JSON summary/log.")
     parser.add_argument(
-        "--skip-splatformer-ckpt",
+        "--skip-layout-ckpt",
+        dest="skip_layout_ckpt",
         action="store_true",
-        help="Validate raw SplatFormer layout before the converted ckpt has been written.",
+        help="Validate raw AnchorSplat eval layout before the converted ckpt has been written.",
     )
     parser.add_argument(
         "--no-gt-eval",
@@ -242,7 +248,7 @@ def parse_single_camera(cameras_txt: Path) -> Tuple[int, str, int, int, Tuple[fl
     height = int(elems[3])
     params = tuple(float(value) for value in elems[4:8])
     if model != "PINHOLE":
-        fail(f"raw SplatFormer layout must use PINHOLE camera model, got {model}")
+        fail(f"raw AnchorSplat eval layout must use PINHOLE camera model, got {model}")
     return camera_id, model, width, height, params
 
 
@@ -260,7 +266,7 @@ def parse_images_text_camera_ids(images_txt: Path) -> Tuple[List[int], List[str]
     return camera_ids, names
 
 
-def load_prepare_record(summary_path: Optional[Path], scene_dir: Path, splatformer_scene_root: Optional[Path]) -> Optional[Dict[str, Any]]:
+def load_prepare_record(summary_path: Optional[Path], scene_dir: Path, eval_scene_root: Optional[Path]) -> Optional[Dict[str, Any]]:
     if summary_path is None:
         return None
     if not summary_path.is_file():
@@ -268,14 +274,14 @@ def load_prepare_record(summary_path: Optional[Path], scene_dir: Path, splatform
     summary = json.loads(summary_path.read_text())
     records = summary.get("results") or summary.get("scenes") or []
     scene_names = {scene_dir.name}
-    if splatformer_scene_root is not None:
-        scene_names.add(splatformer_scene_root.name)
+    if eval_scene_root is not None:
+        scene_names.add(eval_scene_root.name)
     for record in records:
         output_scene = record.get("output_scene")
-        splatformer_scene = record.get("splatformer_scene")
+        eval_scene = record.get("eval_scene")
         if output_scene and Path(str(output_scene)).name in scene_names:
             return record
-        if splatformer_scene and Path(str(splatformer_scene)).name in scene_names:
+        if eval_scene and Path(str(eval_scene)).name in scene_names:
             return record
     fail(f"could not find scene record in prepare summary for {sorted(scene_names)}")
     return None
@@ -292,7 +298,7 @@ def compare_prepare_camera(
         fail("prepare summary reports intrinsics_mode=supergaussian-square; raw MVImgNet layout expected")
     if prepare_record.get("gt_image_dir") != "gt_rgb":
         fail(f"prepare summary reports gt_image_dir={prepare_record.get('gt_image_dir')}; raw gt_rgb expected")
-    layout = prepare_record.get("splatformer_layout") or {}
+    layout = prepare_record.get("eval_layout") or {}
     expected_size = layout.get("image_size")
     expected_intrinsics = layout.get("computed_intrinsics") or {}
     expected_params = (
@@ -317,7 +323,7 @@ def compare_prepare_camera(
     }
 
 
-def validate_splatformer_layout(
+def validate_eval_layout(
     scene_root: Path,
     expected_count: Optional[int],
     prepare_record: Optional[Dict[str, Any]],
@@ -333,7 +339,7 @@ def validate_splatformer_layout(
     require_file(cameras_txt, nonempty=True)
     require_dir(images_dir)
     if not any(path.is_file() for path in images_dir.iterdir()):
-        fail(f"no SplatFormer 1024 images under {images_dir}")
+        fail(f"no AnchorSplat eval 1024 images under {images_dir}")
     require_file(sparse_images_bin, nonempty=True)
     camera_id, camera_model, camera_width, camera_height, camera_params = parse_single_camera(cameras_txt)
     text_camera_ids, text_image_names = parse_images_text_camera_ids(images_txt)
@@ -432,11 +438,11 @@ def validate_render_fit(scene_dir: Path, train_output: Path, iteration: Optional
 def main() -> int:
     args = parse_args()
     scene_dir = Path(args.scene_dir).expanduser().resolve()
-    splatformer_scene_root = Path(args.splatformer_scene_root).expanduser().resolve() if args.splatformer_scene_root else None
+    eval_scene_root = Path(args.eval_scene_root).expanduser().resolve() if args.eval_scene_root else None
     prepare_record = load_prepare_record(
         Path(args.prepare_summary).expanduser().resolve() if args.prepare_summary else None,
         scene_dir,
-        splatformer_scene_root,
+        eval_scene_root,
     )
     summary: Dict[str, object] = {
         "scene_dir": str(scene_dir),
@@ -453,12 +459,12 @@ def main() -> int:
     }
     if args.ckpt:
         summary["ckpt"] = validate_ckpt(Path(args.ckpt).expanduser().resolve(), args.expected_count)
-    if args.splatformer_scene_root:
-        summary["splatformer_layout"] = validate_splatformer_layout(
-            splatformer_scene_root,
+    if args.eval_scene_root:
+        summary["eval_layout"] = validate_eval_layout(
+            eval_scene_root,
             args.expected_count,
             prepare_record,
-            args.skip_splatformer_ckpt,
+            args.skip_layout_ckpt,
         )
     if args.train_output:
         summary["render_fit"] = validate_render_fit(

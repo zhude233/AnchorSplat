@@ -17,15 +17,14 @@ train_dataset/GaussianSceneDataset.dataset_folder = 'data/3dgs-sr/train'
 train_dataset/GaussianSceneDataset.image_per_scene = 4
 train_dataset/GaussianSceneDataset.sample_ratio_test = 1
 train_dataset/GaussianSceneDataset.cache_steps = 5
-train_dataset/GaussianSceneDataset.cache_num_scenes = 10  # no-cache
+train_dataset/GaussianSceneDataset.cache_num_scenes = 10
 train_dataset/GaussianSceneDataset.split_across_gpus = True
 
-
 build_testloader.batch_size = 1
-build_testloader.num_workers = 0  # Use single-process DataLoader to expose full traceback during eval
+build_testloader.num_workers = 0
 build_testloader.collate_fn = %collate_fn
 test_dataset/GaussianSceneDataset.train_or_test = 'test'
-test_dataset/GaussianSceneDataset.dataset_folder = 'data/3dgs-sr/test'
+test_dataset/GaussianSceneDataset.dataset_folder = 'data/mvimgnet_supergaussian_4x'
 test_dataset/GaussianSceneDataset.cache_steps = 1
 test_dataset/GaussianSceneDataset.cache_num_scenes = 1
 test_dataset/GaussianSceneDataset.split_across_gpus = False

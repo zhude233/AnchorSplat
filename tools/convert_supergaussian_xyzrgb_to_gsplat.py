@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert SuperGaussian xyz/rgb inputs into SplatFormer-readable gsplat ckpts."""
+"""Convert SuperGaussian xyz/rgb inputs into AnchorSplat-readable gsplat ckpts."""
 
 from __future__ import annotations
 
@@ -16,8 +16,8 @@ import torch
 
 
 DEFAULT_SOURCE_ROOT = "data/mvimgnet_testset_500"
-DEFAULT_LAYOUT_ROOT = "data/mvimgnet_splatformer_ready"
-DEFAULT_OUTPUT_ROOT = "data/mvimgnet_sginput_splatformer_ready"
+DEFAULT_LAYOUT_ROOT = "data/mvimgnet_lowres_3dgs"
+DEFAULT_OUTPUT_ROOT = "data/mvimgnet_supergaussian"
 C0 = 0.28209479177387814
 
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare MVImgNet raw low-res Gaussian scenes for SplatFormer.
+"""Prepare MVImgNet raw low-res Gaussian scenes for AnchorSplat.
 
 The generated low-res 3DGS scene layout is intentionally compatible with
 ``SuperGaussian/third_parties/gaussian-splatting/train.py``:
@@ -34,7 +34,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from tools.prepare_mvimgnet_splatformer_ready import (  # noqa: E402
+from tools.prepare_mvimgnet_layout import (  # noqa: E402
     IMAGE_EXTENSIONS,
     Intrinsics,
     build_intrinsics_for_camera_poses,
@@ -108,22 +108,25 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
-        "--splatformer-output-root",
+        "--eval-output-root",
+        dest="eval_output_root",
         help=(
-            "Optional root for an independent raw SplatFormer scene layout. "
+            "Optional root for an independent raw AnchorSplat evaluation layout. "
             "The converter later writes 256/gaussian_splatting/ckpts/ckpt_14999_rank0.pt there."
         ),
     )
     parser.add_argument(
-        "--splatformer-image-long-edge",
+        "--eval-image-long-edge",
+        dest="eval_image_long_edge",
         type=int,
         default=1024,
-        help="Long-edge size for raw SplatFormer eval images. Default: 1024.",
+        help="Long-edge size for raw AnchorSplat eval images. Default: 1024.",
     )
     parser.add_argument(
-        "--splatformer-size-name",
+        "--eval-size-name",
+        dest="eval_size_name",
         default="1024",
-        help="Directory name for SplatFormer eval images/cameras. Default: 1024.",
+        help="Directory name for AnchorSplat eval images/cameras. Default: 1024.",
     )
     return parser.parse_args()
 
@@ -412,7 +415,7 @@ def write_colmap_images_text(path: Path, image_records: Sequence[colmap_utils.Im
             f.write(f"{image.id} {q} {t} {image.camera_id} {image.name}\n\n")
 
 
-def write_splatformer_layout(
+def write_eval_layout(
     scene_root: Path,
     image_jobs: Sequence[Tuple[Path, str, Tuple[int, int]]],
     image_records: Sequence[colmap_utils.Image],
@@ -425,7 +428,7 @@ def write_splatformer_layout(
         if overwrite:
             shutil.rmtree(scene_root)
         else:
-            raise FileExistsError(f"SplatFormer output scene exists; pass --overwrite: {scene_root}")
+            raise FileExistsError(f"AnchorSplat eval output scene exists; pass --overwrite: {scene_root}")
     eval_dir = scene_root / size_name
     images_dir = eval_dir / "images"
     sparse_dir = scene_root / "256" / "sparse" / "0"
@@ -436,7 +439,7 @@ def write_splatformer_layout(
 
     for src_image, output_name, output_size in image_jobs:
         if output_size != eval_size:
-            raise ValueError(f"inconsistent SplatFormer eval output size for {output_name}: {output_size} vs {eval_size}")
+            raise ValueError(f"inconsistent AnchorSplat eval output size for {output_name}: {output_size} vs {eval_size}")
         resize_image_to_size(src_image, images_dir / output_name, output_size)
 
     write_colmap_cameras(eval_dir / "cameras.txt", eval_size, eval_intrinsics)
@@ -459,23 +462,23 @@ def write_splatformer_layout(
 def process_scene(scene_dir: Path, category: str, scene: str, args: argparse.Namespace) -> Dict[str, Any]:
     output_scene_name = make_scene_name(category, scene)
     output_scene = Path(args.output_root).expanduser().resolve() / output_scene_name
-    splatformer_scene = (
-        Path(args.splatformer_output_root).expanduser().resolve() / output_scene_name
-        if args.splatformer_output_root
+    eval_scene = (
+        Path(args.eval_output_root).expanduser().resolve() / output_scene_name
+        if args.eval_output_root
         else None
     )
     result: Dict[str, Any] = {
         "source_scene": str(scene_dir),
         "output_scene": str(output_scene),
-        "splatformer_scene": str(splatformer_scene) if splatformer_scene is not None else None,
+        "eval_scene": str(eval_scene) if eval_scene is not None else None,
         "status": "skipped",
         "reasons": [],
     }
     if output_scene.exists() and not args.overwrite:
         result["reasons"] = ["output exists; pass --overwrite"]
         return result
-    if splatformer_scene is not None and splatformer_scene.exists() and not args.overwrite:
-        result["reasons"] = ["SplatFormer output exists; pass --overwrite"]
+    if eval_scene is not None and eval_scene.exists() and not args.overwrite:
+        result["reasons"] = ["AnchorSplat eval output exists; pass --overwrite"]
         return result
 
     gt_dir, gt_dir_name = choose_gt_dir(scene_dir, args.gt_image_dirs)
@@ -500,15 +503,15 @@ def process_scene(scene_dir: Path, category: str, scene: str, args: argparse.Nam
 
     frames = []
     image_jobs = []
-    splatformer_image_jobs = []
-    splatformer_image_records: List[colmap_utils.Image] = []
+    eval_image_jobs = []
+    eval_image_records: List[colmap_utils.Image] = []
     used_output_names: set[str] = set()
     first_size: Optional[Tuple[int, int]] = None
     first_source_size: Optional[Tuple[int, int]] = None
     first_raw_intrinsics: Optional[Intrinsics] = None
     first_intrinsics: Optional[Tuple[float, float, float, float]] = None
-    first_splatformer_size: Optional[Tuple[int, int]] = None
-    first_splatformer_intrinsics: Optional[Tuple[float, float, float, float]] = None
+    first_eval_size: Optional[Tuple[int, int]] = None
+    first_eval_intrinsics: Optional[Tuple[float, float, float, float]] = None
     intrinsics_mode: Optional[str] = None
     for frame_index, camera_pose in enumerate(camera_poses):
         if camera_pose.camera_name not in intrinsics_by_name:
@@ -545,20 +548,20 @@ def process_scene(scene_dir: Path, category: str, scene: str, args: argparse.Nam
             result["reasons"] = [f"per-frame scaled intrinsics differ; first mismatch={camera_pose.camera_name}"]
             return result
 
-        if splatformer_scene is not None:
-            splat_size = output_size_for_long_edge(source_size[0], source_size[1], args.splatformer_image_long_edge)
+        if eval_scene is not None:
+            splat_size = output_size_for_long_edge(source_size[0], source_size[1], args.eval_image_long_edge)
             splat_intrinsics = direct_scale_intrinsics(raw_intrinsics, source_size, splat_size)
-            if first_splatformer_size is None:
-                first_splatformer_size = splat_size
-                first_splatformer_intrinsics = splat_intrinsics
-            elif splat_size != first_splatformer_size:
+            if first_eval_size is None:
+                first_eval_size = splat_size
+                first_eval_intrinsics = splat_intrinsics
+            elif splat_size != first_eval_size:
                 result["reasons"] = [
-                    f"inconsistent SplatFormer eval image size: first={first_splatformer_size}, current={splat_size}"
+                    f"inconsistent AnchorSplat eval image size: first={first_eval_size}, current={splat_size}"
                 ]
                 return result
-            elif first_splatformer_intrinsics is None or not intrinsics_close(first_splatformer_intrinsics, splat_intrinsics):
+            elif first_eval_intrinsics is None or not intrinsics_close(first_eval_intrinsics, splat_intrinsics):
                 result["reasons"] = [
-                    f"per-frame raw direct-scale SplatFormer intrinsics differ; first mismatch={camera_pose.camera_name}"
+                    f"per-frame raw direct-scale AnchorSplat intrinsics differ; first mismatch={camera_pose.camera_name}"
                 ]
                 return result
 
@@ -569,10 +572,10 @@ def process_scene(scene_dir: Path, category: str, scene: str, args: argparse.Nam
             }
         )
         image_jobs.append((src_image, output_name))
-        if splatformer_scene is not None:
-            assert first_splatformer_size is not None
-            splatformer_image_jobs.append((src_image, output_name, first_splatformer_size))
-            splatformer_image_records.append(
+        if eval_scene is not None:
+            assert first_eval_size is not None
+            eval_image_jobs.append((src_image, output_name, first_eval_size))
+            eval_image_records.append(
                 colmap_utils.Image(
                     id=frame_index + 1,
                     qvec=np.asarray(camera_pose.pose.qvec, dtype=np.float64),
@@ -606,18 +609,18 @@ def process_scene(scene_dir: Path, category: str, scene: str, args: argparse.Nam
             "output_size": list(first_size or (0, 0)),
             "raw_intrinsics": intrinsics_to_dict(first_raw_intrinsics) if first_raw_intrinsics is not None else None,
             "computed_intrinsics": camera_params_to_dict(first_intrinsics) if first_intrinsics is not None else None,
-            "splatformer_layout": {
-                "scene_root": str(splatformer_scene) if splatformer_scene is not None else None,
-                "size_name": args.splatformer_size_name,
-                "image_long_edge": int(args.splatformer_image_long_edge),
-                "image_size": list(first_splatformer_size) if first_splatformer_size is not None else None,
+            "eval_layout": {
+                "scene_root": str(eval_scene) if eval_scene is not None else None,
+                "size_name": args.eval_size_name,
+                "image_long_edge": int(args.eval_image_long_edge),
+                "image_size": list(first_eval_size) if first_eval_size is not None else None,
                 "computed_intrinsics": (
-                    camera_params_to_dict(first_splatformer_intrinsics)
-                    if first_splatformer_intrinsics is not None
+                    camera_params_to_dict(first_eval_intrinsics)
+                    if first_eval_intrinsics is not None
                     else None
                 ),
-                "camera_model": "PINHOLE" if splatformer_scene is not None else None,
-                "single_camera": splatformer_scene is not None,
+                "camera_model": "PINHOLE" if eval_scene is not None else None,
+                "single_camera": eval_scene is not None,
             },
             "point_count": int(args.point_count),
             "raw_point_count": int(len(xyz_raw)),
@@ -656,16 +659,16 @@ def process_scene(scene_dir: Path, category: str, scene: str, args: argparse.Nam
     }
     (resolution_low / "transforms.json").write_text(json.dumps(transforms, indent=2) + "\n")
     write_surface_ply(resolution_low / f"surface_pcd_{args.point_count}_seed_0.ply", xyz, rgb)
-    if splatformer_scene is not None:
-        assert first_splatformer_size is not None and first_splatformer_intrinsics is not None
-        write_splatformer_layout(
-            splatformer_scene,
-            splatformer_image_jobs,
-            splatformer_image_records,
-            first_splatformer_size,
-            first_splatformer_intrinsics,
+    if eval_scene is not None:
+        assert first_eval_size is not None and first_eval_intrinsics is not None
+        write_eval_layout(
+            eval_scene,
+            eval_image_jobs,
+            eval_image_records,
+            first_eval_size,
+            first_eval_intrinsics,
             args.overwrite,
-            args.splatformer_size_name,
+            args.eval_size_name,
         )
     return result
 
@@ -706,11 +709,11 @@ def main() -> int:
         "requested_intrinsics_mode": args.intrinsics_mode,
         "intrinsics_mode_default": "direct-scale raw MVImgNet gt_rgb",
         "target_size": args.target_size,
-        "splatformer_output_root": (
-            str(Path(args.splatformer_output_root).expanduser().resolve()) if args.splatformer_output_root else None
+        "eval_output_root": (
+            str(Path(args.eval_output_root).expanduser().resolve()) if args.eval_output_root else None
         ),
-        "splatformer_image_long_edge": int(args.splatformer_image_long_edge),
-        "splatformer_size_name": args.splatformer_size_name,
+        "eval_image_long_edge": int(args.eval_image_long_edge),
+        "eval_size_name": args.eval_size_name,
         "point_count": args.point_count,
         "sample_seed": args.sample_seed,
         "name_policy": "preserve-names" if args.preserve_names else "generated-train-prefix",

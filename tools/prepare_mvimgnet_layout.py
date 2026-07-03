@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare SuperGaussian MVImgNet scenes for SplatFormer evaluation."""
+"""Prepare SuperGaussian MVImgNet scenes for AnchorSplat evaluation."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 
-DEFAULT_OUTPUT_ROOT = "data/mvimgnet_splatformer_ready"
+DEFAULT_OUTPUT_ROOT = "data/mvimgnet_lowres_3dgs"
 DEFAULT_LOW_IMAGE_DIR = "LR_131072_gaussian"
 DEFAULT_HIGH_IMAGE_DIR = "HR_131072_gaussian"
 IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg", ".JPG", ".JPEG", ".PNG")
@@ -98,8 +98,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
             "Convert a SuperGaussian MVImgNet test set with category/scene/"
-            "cam_extrinsics.pkl, cam_intrinsics.pkl, LR_*/HR_* images into a "
-            "SplatFormer-ready layout."
+            "cam_extrinsics.pkl, cam_intrinsics.pkl, LR_*/HR_* images into an "
+            "AnchorSplat evaluation layout."
         )
     )
     parser.add_argument("--source-root", required=True, help="Root of the SuperGaussian MVImgNet test set.")
@@ -129,12 +129,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--low-size-name",
         default="256",
-        help="Output directory name for low-resolution images. Defaults to 256 for SplatFormer compatibility.",
+        help="Output directory name for low-resolution images. Defaults to 256 for AnchorSplat compatibility.",
     )
     parser.add_argument(
         "--high-size-name",
         default="1024",
-        help="Output directory name for high-resolution images. Defaults to 1024 for SplatFormer compatibility.",
+        help="Output directory name for high-resolution images. Defaults to 1024 for AnchorSplat compatibility.",
     )
     parser.add_argument(
         "--high-output-scale",

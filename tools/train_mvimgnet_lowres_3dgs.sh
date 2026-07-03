@@ -38,7 +38,7 @@ The wrapper always calls the SuperGaussian fork train.py with:
   --use_low_res_as_gt --no_gt_eval 1 --num_of_gaussians <N> -r 1
 
 It intentionally bypasses main_supergaussian.py, VSR, 256 fitting, and
-SplatFormer gsplat simple_trainer.
+AnchorSplat gsplat simple_trainer.
 EOF
 }
 

@@ -13,7 +13,7 @@ from collections import OrderedDict
 import random
 import gin 
 from absl import app, flags
-from dataset.Loader import build_trainloader, build_testloader
+from dataset.loaders import build_trainloader, build_testloader
 from utils import gpu_utils, gs_utils, loss_utils
 from utils.optimizers import build_optimizer, build_scheduler
 from utils.metrics import MetricComputer
