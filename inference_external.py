@@ -1,8 +1,8 @@
 """
-Unified inference script for LGM and Trellis generated PLY files.
+Unified inference script for Inria-style/LGM and Trellis generated PLY files.
 
 This script handles the different PLY formats from:
-- LGM: No normals, attributes order: x,y,z,f_dc,opacity,scale,rot
+- Inria/LGM: No normals, attributes order: x,y,z,f_dc,opacity,scale,rot
 - Trellis: Has normals (nx,ny,nz), attributes order: x,y,z,nx,ny,nz,f_dc,opacity,scale,rot
            Also applies coordinate transform during save
 
@@ -10,12 +10,12 @@ Usage:
     python inference_external.py \
         --input_ply /path/to/input.ply \
         --output_ply /path/to/output.ply \
-        --model_type lgm|trellis
+        --model_type inria|lgm|trellis
 
 Example:
-    # For LGM generated PLY
+    # For Inria-style or LGM generated PLY
     python inference_external.py --input_ply examples/lgm_input.ply \
-        --output_ply outputs/lgm_refined.ply --model_type lgm
+        --output_ply outputs/lgm_refined.ply --model_type inria
     
     # For Trellis generated PLY
     python inference_external.py --input_ply examples/trellis_input.ply \
@@ -49,7 +49,7 @@ DEFAULT_GIN_PARAMS = [
 flags.DEFINE_string('weights', DEFAULT_WEIGHTS, 'Path to the model weights')
 flags.DEFINE_string('input_ply', '', 'Path to the input PLY file (required)')
 flags.DEFINE_string('output_ply', '', 'Path to save the output PLY file (required)')
-flags.DEFINE_enum('model_type', 'lgm', ['lgm', 'trellis'], 
+flags.DEFINE_enum('model_type', 'inria', ['inria', 'lgm', 'trellis'],
                   'Type of the source model that generated the PLY file')
 flags.DEFINE_enum(
     'normalization',
@@ -172,14 +172,14 @@ def read_lgm_ply(path, device='cuda'):
     - Opacity in logit space
     - SH DC in (rgb - 0.5) / C0 format
     """
-    print(f"Reading LGM PLY from {path}")
+    print(f"Reading Inria/LGM-style PLY from {path}")
     plydata = PlyData.read(path)
     vertex = plydata['vertex']
     require_vertex_properties(
         vertex,
         ['x', 'y', 'z', 'f_dc_0', 'f_dc_1', 'f_dc_2', 'opacity',
          'scale_0', 'scale_1', 'scale_2', 'rot_0', 'rot_1', 'rot_2', 'rot_3'],
-        'LGM',
+        'Inria/LGM-style',
     )
     
     # Extract positions
@@ -468,7 +468,7 @@ def main(argv):
     
     # 2. Load Input PLY based on model type
     print(f"\nLoading input PLY ({FLAGS.model_type} format)...")
-    if FLAGS.model_type == 'lgm':
+    if FLAGS.model_type in ['inria', 'lgm']:
         gs_params = read_lgm_ply(FLAGS.input_ply, device=device)
     elif FLAGS.model_type == 'trellis':
         gs_params = read_trellis_ply(FLAGS.input_ply, device=device)

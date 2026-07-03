@@ -47,7 +47,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 
 - ✅ **2026-07-02**: Release training code.
 - ✅ **2026-07-02**: Release evaluation code.
-- ✅ **2026-07-02**: Release inference code and demo.
+- ✅ **2026-07-02**: Release inference code and demo PLY.
 - ✅ **2026-07-02**: Release paper PDF.
 - ✅ **2026-07-03**: Release pretrained models.
 - ✅ **2026-07-03**: Release processed third-party datasets (MVImgNet, NeRF-Synthetic).
@@ -56,7 +56,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 
 - ✅ Release training code
 - ✅ Release evaluation code
-- ✅ Release inference code and demo
+- ✅ Release inference code and demo PLY
 - ✅ Release paper PDF
 - ✅ Release pretrained models
 - ✅ Release processed third-party datasets (MVImgNet, NeRF-Synthetic)
@@ -189,20 +189,26 @@ If CUDA extension packages fail to install from `requirements.txt`, install vers
 
 ## ⚡ Inference On External PLY Files
 
-AnchorSplat includes a lightweight inference path for Gaussian PLY files exported by LGM-style or Trellis-style pipelines.
+AnchorSplat includes a lightweight inference path for Gaussian PLY files exported by Inria-style/LGM-style or Trellis-style pipelines.
 
 Place the downloaded checkpoints under `checkpoints/`, or set `WEIGHTS` to a custom path.
 
+The repository includes a runnable demo PLY from the 3DGS-SR test set:
+
+| Demo | Input | Format | Input Gaussians | Expected 20x Output |
+| --- | --- | --- | ---: | ---: |
+| 3DGS-SR test sample | `examples/3dgs_sr_demo.ply` | Inria-style 3DGS | 17,020 | 340,400 |
+
 ```bash
-# 20x detail synthesis.
+# Main 3DGS-SR demo.
 WEIGHTS=checkpoints/anchorsplat_20x.pth \
-bash scripts/inference_external.sh examples/lgm_sample.ply outputs/lgm_sample_refined.ply lgm
+bash scripts/inference_external.sh examples/3dgs_sr_demo.ply outputs/3dgs_sr_demo_20x.ply inria
 
-# 1x single-output refinement.
+# 1x single-output refinement on the 3DGS-SR demo.
 POINT_MULTIPLY_FACTOR=1 WEIGHTS=checkpoints/anchorsplat_1x.pth \
-bash scripts/inference_external.sh examples/lgm_sample.ply outputs/lgm_sample_refined_1x.ply lgm
+bash scripts/inference_external.sh examples/3dgs_sr_demo.ply outputs/3dgs_sr_demo_1x.ply inria
 
-# Trellis-style PLY input.
+# Custom Trellis-style PLY input.
 WEIGHTS=checkpoints/anchorsplat_20x.pth \
 bash scripts/inference_external.sh /path/to/trellis_output.ply outputs/trellis_refined.ply trellis
 ```
@@ -214,9 +220,9 @@ Equivalent Python entry:
 ```bash
 python inference_external.py \
   --weights checkpoints/anchorsplat_20x.pth \
-  --input_ply examples/lgm_sample.ply \
-  --output_ply outputs/lgm_sample_refined.ply \
-  --model_type lgm \
+  --input_ply examples/3dgs_sr_demo.ply \
+  --output_ply outputs/3dgs_sr_demo_20x.ply \
+  --model_type inria \
   --normalization auto
 ```
 
@@ -225,14 +231,14 @@ For the 1x checkpoint:
 ```bash
 python inference_external.py \
   --weights checkpoints/anchorsplat_1x.pth \
-  --input_ply examples/lgm_sample.ply \
-  --output_ply outputs/lgm_sample_refined_1x.ply \
-  --model_type lgm \
+  --input_ply examples/3dgs_sr_demo.ply \
+  --output_ply outputs/3dgs_sr_demo_1x.ply \
+  --model_type inria \
   --normalization auto \
   --gin_param "FeaturePredictor.point_multiply_factor=1"
 ```
 
-The PLY reader expects Inria-style 3DGS attributes: log-space `scale_*`, logit-space `opacity`, SH DC `f_dc_*`, optional `f_rest_*`, and quaternion `rot_*`. Coordinates are normalized internally to `[0, 1]^3`, scales are shifted by the same scalar factor, and the output is written back in the original input coordinate frame.
+The PLY reader expects Inria-style 3DGS attributes: log-space `scale_*`, logit-space `opacity`, SH DC `f_dc_*`, optional `f_rest_*`, and quaternion `rot_*`. Trellis-style PLYs may additionally contain normal fields `nx, ny, nz`. Coordinates are normalized internally to `[0, 1]^3`, scales are shifted by the same scalar factor, and the output is written back in the original input coordinate frame.
 
 ### Input Format
 
@@ -266,16 +272,16 @@ log_scales_out = scales_norm_out - log(s)
 
 The output PLY is written back in the same coordinate frame as the input.
 
-### Sanity Check
+### Demo Check
 
 ```bash
-bash scripts/inference_external.sh examples/lgm_sample.ply outputs/release_check/lgm_sample_20x.ply lgm
+bash scripts/inference_external.sh examples/3dgs_sr_demo.ply outputs/release_check/3dgs_sr_demo_20x.ply inria
 
 POINT_MULTIPLY_FACTOR=1 WEIGHTS=checkpoints/anchorsplat_1x.pth \
-bash scripts/inference_external.sh examples/lgm_sample.ply outputs/release_check/lgm_sample_1x.ply lgm
+bash scripts/inference_external.sh examples/3dgs_sr_demo.ply outputs/release_check/3dgs_sr_demo_1x.ply inria
 ```
 
-The demo input has 2048 Gaussians. The expected outputs are 40960 Gaussians for 20x and 2048 Gaussians for 1x.
+The 3DGS-SR demo input has 17,020 Gaussians. The expected outputs are 340,400 Gaussians for 20x and 17,020 Gaussians for 1x.
 
 ## 🗂️ Dataset Layout
 

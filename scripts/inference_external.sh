@@ -1,19 +1,19 @@
 #!/bin/bash
-# Inference script for LGM and Trellis generated PLY files
+# Inference script for Inria-style/LGM and Trellis generated PLY files
 #
 # Usage:
 #   ./scripts/inference_external.sh <input_ply> <output_ply> <model_type>
 #
-# model_type: lgm or trellis
+# model_type: inria, lgm, or trellis
 #
 # Optional:
-#   WEIGHTS=checkpoints/anchorsplat_20x.pth ./scripts/inference_external.sh input.ply output.ply lgm
-#   POINT_MULTIPLY_FACTOR=1 WEIGHTS=checkpoints/anchorsplat_1x.pth ./scripts/inference_external.sh input.ply output.ply lgm
-#   NORMALIZATION=bbox MAX_INPUT_GAUSSIANS=200000 ./scripts/inference_external.sh input.ply output.ply lgm
+#   WEIGHTS=checkpoints/anchorsplat_20x.pth ./scripts/inference_external.sh input.ply output.ply inria
+#   POINT_MULTIPLY_FACTOR=1 WEIGHTS=checkpoints/anchorsplat_1x.pth ./scripts/inference_external.sh input.ply output.ply inria
+#   NORMALIZATION=bbox MAX_INPUT_GAUSSIANS=200000 ./scripts/inference_external.sh input.ply output.ply inria
 
 INPUT_PLY=${1:-""}
 OUTPUT_PLY=${2:-""}
-MODEL_TYPE=${3:-"lgm"}
+MODEL_TYPE=${3:-"inria"}
 WEIGHTS=${WEIGHTS:-"checkpoints/anchorsplat_20x.pth"}
 POINT_MULTIPLY_FACTOR=${POINT_MULTIPLY_FACTOR:-20}
 NORMALIZATION=${NORMALIZATION:-"auto"}
@@ -21,7 +21,7 @@ MAX_INPUT_GAUSSIANS=${MAX_INPUT_GAUSSIANS:-0}
 
 if [ -z "$INPUT_PLY" ] || [ -z "$OUTPUT_PLY" ]; then
     echo "Usage: $0 <input_ply> <output_ply> <model_type>"
-    echo "  model_type: lgm or trellis (default: lgm)"
+    echo "  model_type: inria, lgm, or trellis (default: inria)"
     exit 1
 fi
 
