@@ -81,6 +81,28 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | 3DGS-SR dataset | - |
 | Project page | - |
 
+## 🤗 Model Zoo
+
+| Variant | Checkpoint | Output | Setting |
+| --- | --- | --- | --- |
+| 20x | [anchorsplat_20x.pth](https://huggingface.co/de233/AnchorSplat-20x) | 20 Gaussians per input anchor | default |
+| 1x | [anchorsplat_1x.pth](https://huggingface.co/de233/AnchorSplat-1x) | 1 Gaussian per input anchor | `POINT_MULTIPLY_FACTOR=1` |
+
+```bash
+huggingface-cli download de233/AnchorSplat-20x anchorsplat_20x.pth --local-dir checkpoints
+huggingface-cli download de233/AnchorSplat-1x anchorsplat_1x.pth --local-dir checkpoints
+```
+
+Use the 20x checkpoint for detail synthesis. Use the 1x checkpoint when you want a single refined Gaussian per input anchor or a lighter drop-in pass.
+
+Important:
+
+- 20x is the default configuration.
+- 1x must be used with `POINT_MULTIPLY_FACTOR=1` or `--gin_param "FeaturePredictor.point_multiply_factor=1"`.
+- A mismatched checkpoint and multiply factor will raise a strict weight shape error.
+- 20x expands the Gaussian count by 20. Set `MAX_INPUT_GAUSSIANS` for very large inputs.
+- Missing higher-order SH fields are padded with zeros, so SH-0/DC-only inputs are supported.
+
 ## 🛠️ Installation
 
 The code is tested around PyTorch, CUDA extension packages, Pointcept, and gsplat. Exact wheels depend on your CUDA and PyTorch versions.
@@ -118,25 +140,23 @@ If CUDA extension packages fail to install from `requirements.txt`, install vers
 
 AnchorSplat includes a lightweight inference path for Gaussian PLY files exported by LGM-style or Trellis-style pipelines.
 
-Place the downloaded checkpoints under `checkpoints/`, or set `WEIGHTS` to a custom path. The default scripts use the 20x model; set `POINT_MULTIPLY_FACTOR=1` when using the 1x checkpoint.
+Place the downloaded checkpoints under `checkpoints/`, or set `WEIGHTS` to a custom path.
 
 ```bash
-huggingface-cli download de233/AnchorSplat-20x anchorsplat_20x.pth --local-dir checkpoints
-huggingface-cli download de233/AnchorSplat-1x anchorsplat_1x.pth --local-dir checkpoints
-```
-
-```bash
+# 20x detail synthesis.
 WEIGHTS=checkpoints/anchorsplat_20x.pth \
 bash scripts/inference_external.sh examples/lgm_sample.ply outputs/lgm_sample_refined.ply lgm
 
+# 1x single-output refinement.
 POINT_MULTIPLY_FACTOR=1 WEIGHTS=checkpoints/anchorsplat_1x.pth \
 bash scripts/inference_external.sh examples/lgm_sample.ply outputs/lgm_sample_refined_1x.ply lgm
 
+# Trellis-style PLY input.
 WEIGHTS=checkpoints/anchorsplat_20x.pth \
 bash scripts/inference_external.sh /path/to/trellis_output.ply outputs/trellis_refined.ply trellis
 ```
 
-Use `NORMALIZATION=centered` for object-centric assets near the origin and `NORMALIZATION=bbox` for translated COLMAP/world-frame assets. The default `NORMALIZATION=auto` chooses between them from the input bounding box.
+Use `NORMALIZATION=centered` for object-centric assets near the origin and `NORMALIZATION=bbox` for translated COLMAP/world-frame assets. The default `NORMALIZATION=auto` chooses between them from the input bounding box. If output scale or placement looks wrong for an external asset, rerun with `NORMALIZATION=bbox`.
 
 Equivalent Python entry:
 
@@ -149,7 +169,17 @@ python inference_external.py \
   --normalization auto
 ```
 
-For the 1x checkpoint, use `--weights checkpoints/anchorsplat_1x.pth --gin_param "FeaturePredictor.point_multiply_factor=1"`.
+For the 1x checkpoint:
+
+```bash
+python inference_external.py \
+  --weights checkpoints/anchorsplat_1x.pth \
+  --input_ply examples/lgm_sample.ply \
+  --output_ply outputs/lgm_sample_refined_1x.ply \
+  --model_type lgm \
+  --normalization auto \
+  --gin_param "FeaturePredictor.point_multiply_factor=1"
+```
 
 The PLY reader expects Inria-style 3DGS attributes: log-space `scale_*`, logit-space `opacity`, SH DC `f_dc_*`, optional `f_rest_*`, and quaternion `rot_*`. Coordinates are normalized internally to `[0, 1]^3`, scales are shifted by the same scalar factor, and the output is written back in the original input coordinate frame.
 
@@ -184,6 +214,17 @@ log_scales_out = scales_norm_out - log(s)
 ```
 
 The output PLY is written back in the same coordinate frame as the input.
+
+### Sanity Check
+
+```bash
+bash scripts/inference_external.sh examples/lgm_sample.ply outputs/release_check/lgm_sample_20x.ply lgm
+
+POINT_MULTIPLY_FACTOR=1 WEIGHTS=checkpoints/anchorsplat_1x.pth \
+bash scripts/inference_external.sh examples/lgm_sample.ply outputs/release_check/lgm_sample_1x.ply lgm
+```
+
+The demo input has 2048 Gaussians. The expected outputs are 40960 Gaussians for 20x and 2048 Gaussians for 1x.
 
 ## 🗂️ Dataset Layout
 
@@ -251,13 +292,15 @@ python train.py --disable_wandb=false ...
 
 ## 📊 Evaluation
 
-Run evaluation with a checkpoint:
+Evaluation requires the processed test set under `data/3dgs-sr/test` or a custom path set through Gin. Run evaluation with the matching checkpoint and multiply factor:
 
 ```bash
+# 20x.
 CHECKPOINT=checkpoints/anchorsplat_20x.pth \
 GPUS=0 NPROC=1 \
 bash scripts/evaluate_anchorsplat.sh
 
+# 1x.
 POINT_MULTIPLY_FACTOR=1 CHECKPOINT=checkpoints/anchorsplat_1x.pth \
 GPUS=0 NPROC=1 OUTPUT_DIR=outputs/eval_anchorsplat_1x \
 bash scripts/evaluate_anchorsplat.sh
