@@ -79,6 +79,24 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | 3DGS-SR dataset | - |
 | Project page | - |
 
+## 📚 Citation
+
+If you find AnchorSplat useful for your research, please consider citing:
+
+```bibtex
+@article{zhu2026anchorsplat,
+  title={AnchorSplat: Fast and Structure Consistent Detail Synthesis for Gaussian Splatting},
+  author={Zhu, Dexu and Shao, Jiangnan and Wang, Xiaofeng and Duan, Junxian and Cao, Jie and Zhu, Zheng and Huang, Huaibo},
+  journal={arXiv preprint arXiv:2607.01290},
+  year={2026},
+  eprint={2607.01290},
+  archivePrefix={arXiv},
+  primaryClass={cs.CV},
+  doi={10.48550/arXiv.2607.01290},
+  url={https://arxiv.org/abs/2607.01290}
+}
+```
+
 ## 🛠️ Installation
 
 The code is tested around PyTorch, CUDA extension packages, Pointcept, and gsplat. Exact wheels depend on your CUDA and PyTorch versions.
