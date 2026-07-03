@@ -43,6 +43,37 @@ Official code release for **AnchorSplat**.
 
 AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low-quality 3D Gaussian Splatting assets. Given only a coarse 3DGS model, it synthesizes detail-rich Gaussian primitives directly in 3D with a single network forward pass, avoiding the slow render-SR-reoptimize pipeline used by 2D-centric 3DGS super-resolution methods.
 
+## 🔥 News
+
+- ✅ **2026-07-02**: Release training code.
+- ✅ **2026-07-02**: Release evaluation code.
+- ✅ **2026-07-02**: Release inference code and demo.
+- ✅ **2026-07-02**: Release paper PDF.
+- ✅ **2026-07-03**: Release pretrained models.
+- ✅ **2026-07-03**: Release processed third-party datasets (MVImgNet, NeRF-Synthetic).
+
+## 📌 Release TODO
+
+- ✅ Release training code
+- ✅ Release evaluation code
+- ✅ Release inference code and demo
+- ✅ Release paper PDF
+- ✅ Release pretrained models
+- ✅ Release processed third-party datasets (MVImgNet, NeRF-Synthetic)
+- ⬜ Release 3DGS-SR dataset
+- ⬜ Release project page
+
+## 🔗 Resources
+
+| Resource | Link |
+| --- | --- |
+| Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
+| Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
+| Pretrained models | [Hugging Face](https://huggingface.co/de233/AnchorSplat) |
+| Processed third-party datasets (MVImgNet, NeRF-Synthetic) | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data) |
+| 3DGS-SR dataset | - |
+| Project page | - |
+
 ## ✨ Highlights
 
 - ⚡ **Fast**: feed-forward 3D-native enhancement without per-scene optimization.
@@ -100,37 +131,6 @@ Paper-reported results from the ECCV 2026 submission.
 | 1x points | 36.42 | 0.943 | 0.063 |
 | 10x points | 36.51 | 0.944 | 0.060 |
 | 20x points | 36.57 | 0.944 | 0.058 |
-
-## 🔥 News
-
-- ✅ **2026-07-02**: Release training code.
-- ✅ **2026-07-02**: Release evaluation code.
-- ✅ **2026-07-02**: Release inference code and demo.
-- ✅ **2026-07-02**: Release paper PDF.
-- ✅ **2026-07-03**: Release pretrained models.
-- ✅ **2026-07-03**: Release processed third-party datasets (MVImgNet, NeRF-Synthetic).
-
-## 📌 Release TODO
-
-- ✅ Release training code
-- ✅ Release evaluation code
-- ✅ Release inference code and demo
-- ✅ Release paper PDF
-- ✅ Release pretrained models
-- ✅ Release processed third-party datasets (MVImgNet, NeRF-Synthetic)
-- ⬜ Release 3DGS-SR dataset
-- ⬜ Release project page
-
-## 🔗 Resources
-
-| Resource | Link |
-| --- | --- |
-| Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
-| Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
-| Pretrained models | [Hugging Face](https://huggingface.co/de233/AnchorSplat) |
-| Processed third-party datasets (MVImgNet, NeRF-Synthetic) | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data) |
-| 3DGS-SR dataset | - |
-| Project page | - |
 
 ## 🤗 Model Zoo
 
