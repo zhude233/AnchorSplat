@@ -50,6 +50,57 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - 🔌 **Plug-and-play**: supports external 3DGS PLY inputs with explicit normalization and coordinate restoration.
 - 🎯 **Structure-consistent**: local point anchors keep generated details aligned with the input geometry.
 
+## 🚀 Input / Output
+
+AnchorSplat is **source-free** at inference time: it takes a low-quality 3DGS asset as input and does not require the original multi-view images.
+
+| Item | Description |
+| --- | --- |
+| Input | A low-quality 3DGS asset. Benchmark evaluation uses a low-resolution gsplat checkpoint with COLMAP camera files; plug-and-play inference uses an Inria-style 3DGS PLY. |
+| Target views | High-resolution images in the released evaluation packages are used only for metrics, never as model input. |
+| Output | An enhanced 3DGS asset in the same coordinate frame as the input; evaluation scripts additionally save rendered comparisons and metrics. |
+| 20x model | Generates 20 output Gaussians per input anchor for detail synthesis. |
+| 1x model | Generates 1 output Gaussian per input anchor for lightweight refinement. |
+| Normalization | Input Gaussian means are normalized to `[0, 1]^3` internally, scales are shifted by the same factor, and outputs are restored to the original coordinate frame. |
+
+## 📈 Paper Results
+
+Paper-reported results from the ECCV 2026 submission.
+
+**3DGS-SR Dataset (1024 × 1024)**
+
+| Method | Source-Free | PSNR | SSIM | LPIPS | Time |
+| --- | :---: | ---: | ---: | ---: | ---: |
+| 3DGS | - | 31.03 | 0.917 | 0.076 | - |
+| Bicubic | ✗ | 34.36 | 0.923 | 0.064 | ~4m |
+| SRGS | ✗ | 35.24 | 0.941 | 0.104 | ~16m |
+| Sequence Matters | ✗ | 35.69 | 0.937 | 0.074 | ~34m |
+| SuperGaussian | ✓ | 34.94 | 0.924 | 0.097 | ~41m |
+| AnchorSplat | ✓ | 36.57 | 0.943 | 0.058 | ~0.01s |
+
+**NeRF-Synthetic Dataset**
+
+| Method | Source-Free | PSNR | SSIM | LPIPS | Time |
+| --- | :---: | ---: | ---: | ---: | ---: |
+| 3DGS | - | 23.30 | 0.872 | 0.114 | - |
+| Bicubic | ✗ | 27.56 | 0.915 | 0.104 | ~4m |
+| DiSR-NeRF | ✗ | 26.00 | 0.889 | 0.122 | ~30m |
+| NeRF-SR | ✗ | 28.46 | 0.921 | 0.076 | ~24h |
+| Gaussian-SR | ✗ | 28.37 | 0.924 | 0.087 | ~15m |
+| SRGS | ✗ | 30.83 | 0.948 | 0.056 | ~18m |
+| Sequence Matters | ✗ | 31.41 | 0.952 | 0.054 | ~40m |
+| SuperGaussian | ✓ | 28.44 | 0.945 | 0.067 | ~45m |
+| AnchorSplat | ✓ | 28.97 | 0.935 | 0.077 | ~0.01s |
+
+**Ablation on 3DGS-SR**
+
+| Method | PSNR | SSIM | LPIPS |
+| --- | ---: | ---: | ---: |
+| w/o Point Anchor | 26.79 | 0.886 | 0.186 |
+| 1x points | 36.42 | 0.943 | 0.063 |
+| 10x points | 36.51 | 0.944 | 0.060 |
+| 20x points | 36.57 | 0.944 | 0.058 |
+
 ## 🔥 News
 
 - ✅ **2026-07-02**: Release training code.
@@ -57,7 +108,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ **2026-07-02**: Release inference code and demo.
 - ✅ **2026-07-02**: Release paper PDF.
 - ✅ **2026-07-03**: Release pretrained models.
-- ✅ **2026-07-03**: Release processed third-party datasets.
+- ✅ **2026-07-03**: Release processed third-party datasets (MVImgNet, NeRF-Synthetic).
 
 ## 📌 Release TODO
 
@@ -66,7 +117,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ Release inference code and demo
 - ✅ Release paper PDF
 - ✅ Release pretrained models
-- ✅ Release processed third-party datasets
+- ✅ Release processed third-party datasets (MVImgNet, NeRF-Synthetic)
 - ⬜ Release 3DGS-SR dataset
 - ⬜ Release project page
 
@@ -77,7 +128,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
 | Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
 | Pretrained models | [Hugging Face](https://huggingface.co/de233/AnchorSplat) |
-| Processed third-party datasets | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data) |
+| Processed third-party datasets (MVImgNet, NeRF-Synthetic) | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data) |
 | 3DGS-SR dataset | - |
 | Project page | - |
 
