@@ -34,7 +34,7 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2607.01290"><img src="https://img.shields.io/badge/arXiv-2607.01290-b31b1b?logo=arxiv&logoColor=white" alt="arXiv"></a>
   <a href="https://github.com/zhude233/AnchorSplat"><img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"></a>
-  <a href="#-resources"><img src="https://img.shields.io/badge/Model-Hugging%20Face-yellow?logo=huggingface" alt="Model"></a>
+  <a href="https://huggingface.co/de233/AnchorSplat"><img src="https://img.shields.io/badge/Model-Hugging%20Face-yellow?logo=huggingface" alt="Model"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Data-coming%20soon-blue?logo=huggingface" alt="Data"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome" alt="Project Page"></a>
 </p>
@@ -75,8 +75,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | --- | --- |
 | Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
 | Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
-| Pretrained model (20x) | [Hugging Face](https://huggingface.co/de233/AnchorSplat-20x) |
-| Pretrained model (1x) | [Hugging Face](https://huggingface.co/de233/AnchorSplat-1x) |
+| Pretrained models | [Hugging Face](https://huggingface.co/de233/AnchorSplat) |
 | Processed third-party datasets | - |
 | 3DGS-SR dataset | - |
 | Project page | - |
@@ -85,12 +84,12 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 
 | Variant | Checkpoint | Output | Setting |
 | --- | --- | --- | --- |
-| 20x | [anchorsplat_20x.pth](https://huggingface.co/de233/AnchorSplat-20x) | 20 Gaussians per input anchor | default |
-| 1x | [anchorsplat_1x.pth](https://huggingface.co/de233/AnchorSplat-1x) | 1 Gaussian per input anchor | `POINT_MULTIPLY_FACTOR=1` |
+| 20x | [anchorsplat_20x.pth](https://huggingface.co/de233/AnchorSplat/blob/main/anchorsplat_20x.pth) | 20 Gaussians per input anchor | default |
+| 1x | [anchorsplat_1x.pth](https://huggingface.co/de233/AnchorSplat/blob/main/anchorsplat_1x.pth) | 1 Gaussian per input anchor | `POINT_MULTIPLY_FACTOR=1` |
 
 ```bash
-huggingface-cli download de233/AnchorSplat-20x anchorsplat_20x.pth --local-dir checkpoints
-huggingface-cli download de233/AnchorSplat-1x anchorsplat_1x.pth --local-dir checkpoints
+huggingface-cli download de233/AnchorSplat anchorsplat_20x.pth --local-dir checkpoints
+huggingface-cli download de233/AnchorSplat anchorsplat_1x.pth --local-dir checkpoints
 ```
 
 Use the 20x checkpoint for detail synthesis. Use the 1x checkpoint when you want a single refined Gaussian per input anchor or a lighter drop-in pass.
