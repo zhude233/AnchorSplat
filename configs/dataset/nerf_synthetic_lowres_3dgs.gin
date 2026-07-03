@@ -1,0 +1,30 @@
+GaussianSceneDataset.remove_outlier_ndevs=-1
+GaussianSceneDataset.image_per_scene = None
+GaussianSceneDataset.sample_ratio_test = None
+GaussianSceneDataset.max_gs_num = 1000000
+GaussianSceneDataset.load_pose_src = 'colmap'
+GaussianSceneDataset.low_resolution = 200
+GaussianSceneDataset.high_resolution = 800
+GaussianSceneDataset.input_ckpt_step = 14999
+
+collate_fn = @gaussian_collate_fn
+build_trainloader.batch_size = 1
+build_trainloader.accumulate_step = 1
+build_trainloader.num_workers = 16
+build_trainloader.collate_fn = %collate_fn
+train_dataset/GaussianSceneDataset.train_or_test = 'train'
+train_dataset/GaussianSceneDataset.dataset_folder = 'data/3dgs-sr/train'
+train_dataset/GaussianSceneDataset.image_per_scene = 4
+train_dataset/GaussianSceneDataset.sample_ratio_test = 1
+train_dataset/GaussianSceneDataset.cache_steps = 5
+train_dataset/GaussianSceneDataset.cache_num_scenes = 10
+train_dataset/GaussianSceneDataset.split_across_gpus = True
+
+build_testloader.batch_size = 1
+build_testloader.num_workers = 0
+build_testloader.collate_fn = %collate_fn
+test_dataset/GaussianSceneDataset.train_or_test = 'test'
+test_dataset/GaussianSceneDataset.dataset_folder = 'data/nerf_synthetic_lowres_3dgs'
+test_dataset/GaussianSceneDataset.cache_steps = 1
+test_dataset/GaussianSceneDataset.cache_num_scenes = 1
+test_dataset/GaussianSceneDataset.split_across_gpus = False

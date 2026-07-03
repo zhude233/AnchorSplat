@@ -347,6 +347,45 @@ Small last-digit differences can appear across CUDA/gsplat environments.
 
 The ordinary SuperGaussian 4x processed input is a different package and does not reproduce this rebuttal table.
 
+### NeRF-Synthetic Zero-Shot Evaluation
+
+The ECCV 2026 NeRF-Synthetic evaluation uses the non-sparse package named `nerf_synthetic_lowres_3dgs`.
+
+```bash
+mkdir -p data/downloads
+huggingface-cli download de233/AnchorSplat-Processed-Third-Party-Data \
+  nerf_synthetic_lowres_3dgs.tar.zst \
+  --repo-type dataset \
+  --local-dir data/downloads
+
+mkdir -p data
+tar --zstd -xf data/downloads/nerf_synthetic_lowres_3dgs.tar.zst -C data
+```
+
+Then run:
+
+```bash
+CHECKPOINT=checkpoints/anchorsplat_20x.pth \
+DATA_CONFIG=configs/dataset/nerf_synthetic_lowres_3dgs.gin \
+GPUS=0 NPROC=1 OUTPUT_DIR=outputs/eval_nerf_synthetic_20x \
+bash scripts/evaluate_anchorsplat.sh
+
+POINT_MULTIPLY_FACTOR=1 CHECKPOINT=checkpoints/anchorsplat_1x.pth \
+DATA_CONFIG=configs/dataset/nerf_synthetic_lowres_3dgs.gin \
+GPUS=0 NPROC=1 OUTPUT_DIR=outputs/eval_nerf_synthetic_1x \
+bash scripts/evaluate_anchorsplat.sh
+```
+
+Verified metrics on 8 NeRF-Synthetic scenes:
+
+| Method | PSNR | SSIM | LPIPS |
+| --- | ---: | ---: | ---: |
+| 3DGS input | 23.31 | 0.873 | 0.097 |
+| AnchorSplat-1x | 28.36 | 0.932 | 0.085 |
+| AnchorSplat-20x | 28.72 | 0.935 | 0.073 |
+
+Use this non-sparse package for the NeRF-Synthetic setting. Sparse or bicubic NeRF folders are different baselines and should not be used as AnchorSplat inputs for this evaluation.
+
 ## 🧰 Dataset Preparation Tools
 
 The `tools/` directory contains helper scripts used during internal data conversion and low-resolution 3DGS preparation:
