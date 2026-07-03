@@ -2,7 +2,7 @@
   <img src="docs/assets/anchorsplat_banner.png" alt="AnchorSplat title image" width="100%">
 </p>
 
-<h1 align="center">AnchorSplat: Fast and Structure Consistent Detail Synthesis for Gaussian Splatting</h1>
+<h1 align="center">Fast and Structure Consistent Detail Synthesis for Gaussian Splatting</h1>
 
 <h3 align="center">ECCV 2026</h3>
 
@@ -32,7 +32,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/zhude233/AnchorSplat/blob/main/docs/AnchorSplat_ECCV2026.pdf"><img src="https://img.shields.io/badge/Paper-PDF-b31b1b?logo=adobeacrobatreader&logoColor=white" alt="Paper"></a>
+  <a href="https://arxiv.org/abs/2607.01290"><img src="https://img.shields.io/badge/arXiv-2607.01290-b31b1b?logo=arxiv&logoColor=white" alt="arXiv"></a>
   <a href="https://github.com/zhude233/AnchorSplat"><img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Model-coming%20soon-yellow?logo=huggingface" alt="Model"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Data-coming%20soon-blue?logo=huggingface" alt="Data"></a>
@@ -73,7 +73,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | Resource | Link |
 | --- | --- |
 | Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
-| Paper | [PDF](https://github.com/zhude233/AnchorSplat/blob/main/docs/AnchorSplat_ECCV2026.pdf) |
+| Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
 | Pretrained model | - |
 | Processed third-party datasets | - |
 | 3DGS-SR dataset | - |
