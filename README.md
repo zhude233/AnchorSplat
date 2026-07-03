@@ -34,7 +34,7 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2607.01290"><img src="https://img.shields.io/badge/arXiv-2607.01290-b31b1b?logo=arxiv&logoColor=white" alt="arXiv"></a>
   <a href="https://github.com/zhude233/AnchorSplat"><img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"></a>
-  <a href="https://huggingface.co/de233/AnchorSplat-20x"><img src="https://img.shields.io/badge/Model-Hugging%20Face-yellow?logo=huggingface" alt="Model"></a>
+  <a href="#-resources"><img src="https://img.shields.io/badge/Model-Hugging%20Face-yellow?logo=huggingface" alt="Model"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Data-coming%20soon-blue?logo=huggingface" alt="Data"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome" alt="Project Page"></a>
 </p>
@@ -56,7 +56,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ **2026-07-02**: Release evaluation code.
 - ✅ **2026-07-02**: Release inference code and demo.
 - ✅ **2026-07-02**: Release paper PDF.
-- ✅ **2026-07-03**: Release pretrained model.
+- ✅ **2026-07-03**: Release pretrained models.
 
 ## 📌 Release TODO
 
@@ -64,7 +64,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ Release evaluation code
 - ✅ Release inference code and demo
 - ✅ Release paper PDF
-- ✅ Release pretrained model
+- ✅ Release pretrained models
 - ⬜ Release processed third-party datasets
 - ⬜ Release 3DGS-SR dataset
 - ⬜ Release project page
@@ -75,7 +75,8 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | --- | --- |
 | Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
 | Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
-| Pretrained model | [Hugging Face](https://huggingface.co/de233/AnchorSplat-20x) |
+| Pretrained model (20x) | [Hugging Face](https://huggingface.co/de233/AnchorSplat-20x) |
+| Pretrained model (1x) | [Hugging Face](https://huggingface.co/de233/AnchorSplat-1x) |
 | Processed third-party datasets | - |
 | 3DGS-SR dataset | - |
 | Project page | - |
@@ -117,15 +118,19 @@ If CUDA extension packages fail to install from `requirements.txt`, install vers
 
 AnchorSplat includes a lightweight inference path for Gaussian PLY files exported by LGM-style or Trellis-style pipelines.
 
-Place the downloaded checkpoint at `checkpoints/anchorsplat_20x.pth`, or set `WEIGHTS` to a custom path.
+Place the downloaded checkpoints under `checkpoints/`, or set `WEIGHTS` to a custom path. The default scripts use the 20x model; set `POINT_MULTIPLY_FACTOR=1` when using the 1x checkpoint.
 
 ```bash
 huggingface-cli download de233/AnchorSplat-20x anchorsplat_20x.pth --local-dir checkpoints
+huggingface-cli download de233/AnchorSplat-1x anchorsplat_1x.pth --local-dir checkpoints
 ```
 
 ```bash
 WEIGHTS=checkpoints/anchorsplat_20x.pth \
 bash scripts/inference_external.sh examples/lgm_sample.ply outputs/lgm_sample_refined.ply lgm
+
+POINT_MULTIPLY_FACTOR=1 WEIGHTS=checkpoints/anchorsplat_1x.pth \
+bash scripts/inference_external.sh examples/lgm_sample.ply outputs/lgm_sample_refined_1x.ply lgm
 
 WEIGHTS=checkpoints/anchorsplat_20x.pth \
 bash scripts/inference_external.sh /path/to/trellis_output.ply outputs/trellis_refined.ply trellis
@@ -143,6 +148,8 @@ python inference_external.py \
   --model_type lgm \
   --normalization auto
 ```
+
+For the 1x checkpoint, use `--weights checkpoints/anchorsplat_1x.pth --gin_param "FeaturePredictor.point_multiply_factor=1"`.
 
 The PLY reader expects Inria-style 3DGS attributes: log-space `scale_*`, logit-space `opacity`, SH DC `f_dc_*`, optional `f_rest_*`, and quaternion `rot_*`. Coordinates are normalized internally to `[0, 1]^3`, scales are shifted by the same scalar factor, and the output is written back in the original input coordinate frame.
 
@@ -226,6 +233,8 @@ GPUS=0 NPROC=1 ACCUMULATE_STEP=8 OUTPUT_DIR=outputs/anchorsplat_20x_single_gpu \
 bash scripts/train_anchorsplat.sh
 ```
 
+Set `POINT_MULTIPLY_FACTOR=1` to train the single-output variant.
+
 The core model settings are in `configs/model/ptv3.gin`:
 
 ```gin
@@ -247,6 +256,10 @@ Run evaluation with a checkpoint:
 ```bash
 CHECKPOINT=checkpoints/anchorsplat_20x.pth \
 GPUS=0 NPROC=1 \
+bash scripts/evaluate_anchorsplat.sh
+
+POINT_MULTIPLY_FACTOR=1 CHECKPOINT=checkpoints/anchorsplat_1x.pth \
+GPUS=0 NPROC=1 OUTPUT_DIR=outputs/eval_anchorsplat_1x \
 bash scripts/evaluate_anchorsplat.sh
 ```
 

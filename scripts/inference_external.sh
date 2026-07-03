@@ -8,12 +8,14 @@
 #
 # Optional:
 #   WEIGHTS=checkpoints/anchorsplat_20x.pth ./scripts/inference_external.sh input.ply output.ply lgm
+#   POINT_MULTIPLY_FACTOR=1 WEIGHTS=checkpoints/anchorsplat_1x.pth ./scripts/inference_external.sh input.ply output.ply lgm
 #   NORMALIZATION=bbox MAX_INPUT_GAUSSIANS=200000 ./scripts/inference_external.sh input.ply output.ply lgm
 
 INPUT_PLY=${1:-""}
 OUTPUT_PLY=${2:-""}
 MODEL_TYPE=${3:-"lgm"}
 WEIGHTS=${WEIGHTS:-"checkpoints/anchorsplat_20x.pth"}
+POINT_MULTIPLY_FACTOR=${POINT_MULTIPLY_FACTOR:-20}
 NORMALIZATION=${NORMALIZATION:-"auto"}
 MAX_INPUT_GAUSSIANS=${MAX_INPUT_GAUSSIANS:-0}
 
@@ -29,6 +31,7 @@ echo "  Input: $INPUT_PLY"
 echo "  Output: $OUTPUT_PLY"
 echo "  Model Type: $MODEL_TYPE"
 echo "  Weights: $WEIGHTS"
+echo "  Point Multiply Factor: $POINT_MULTIPLY_FACTOR"
 echo "  Normalization: $NORMALIZATION"
 echo "  Max Input Gaussians: $MAX_INPUT_GAUSSIANS"
 echo "================================================"
@@ -39,4 +42,5 @@ python inference_external.py \
     --output_ply "$OUTPUT_PLY" \
     --model_type "$MODEL_TYPE" \
     --normalization "$NORMALIZATION" \
-    --max_input_gaussians "$MAX_INPUT_GAUSSIANS"
+    --max_input_gaussians "$MAX_INPUT_GAUSSIANS" \
+    --gin_param "FeaturePredictor.point_multiply_factor=${POINT_MULTIPLY_FACTOR}"

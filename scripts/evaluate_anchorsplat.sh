@@ -6,6 +6,7 @@ NPROC=${NPROC:-1}
 PORT=${PORT:-29519}
 OUTPUT_DIR=${OUTPUT_DIR:-"outputs/eval_anchorsplat_20x"}
 CHECKPOINT=${CHECKPOINT:-"checkpoints/anchorsplat_20x.pth"}
+POINT_MULTIPLY_FACTOR=${POINT_MULTIPLY_FACTOR:-20}
 DATA_CONFIG=${DATA_CONFIG:-"configs/dataset/objaverse.gin"}
 MODEL_CONFIG=${MODEL_CONFIG:-"configs/model/ptv3.gin"}
 TRAIN_CONFIG=${TRAIN_CONFIG:-"configs/train/default.gin"}
@@ -21,6 +22,7 @@ CUDA_VISIBLE_DEVICES="${GPUS}" torchrun \
     --gin_file="${TRAIN_CONFIG}" \
     --gin_param="build_trainloader.batch_size=${NPROC}" \
     --gin_param="FeaturePredictor.resume_ckpt='${CHECKPOINT}'" \
+    --gin_param="FeaturePredictor.point_multiply_factor=${POINT_MULTIPLY_FACTOR}" \
     --only_eval \
     --eval_subdir="test" \
     --compare_with_input
