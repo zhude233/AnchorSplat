@@ -34,7 +34,7 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2607.01290"><img src="https://img.shields.io/badge/arXiv-2607.01290-b31b1b?logo=arxiv&logoColor=white" alt="arXiv"></a>
   <a href="https://github.com/zhude233/AnchorSplat"><img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"></a>
-  <a href="#-resources"><img src="https://img.shields.io/badge/Model-coming%20soon-yellow?logo=huggingface" alt="Model"></a>
+  <a href="https://huggingface.co/de233/AnchorSplat-20x"><img src="https://img.shields.io/badge/Model-Hugging%20Face-yellow?logo=huggingface" alt="Model"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Data-coming%20soon-blue?logo=huggingface" alt="Data"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome" alt="Project Page"></a>
 </p>
@@ -56,6 +56,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ **2026-07-02**: Release evaluation code.
 - ✅ **2026-07-02**: Release inference code and demo.
 - ✅ **2026-07-02**: Release paper PDF.
+- ✅ **2026-07-03**: Release pretrained model.
 
 ## 📌 Release TODO
 
@@ -63,7 +64,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ Release evaluation code
 - ✅ Release inference code and demo
 - ✅ Release paper PDF
-- ⬜ Release pretrained model
+- ✅ Release pretrained model
 - ⬜ Release processed third-party datasets
 - ⬜ Release 3DGS-SR dataset
 - ⬜ Release project page
@@ -74,7 +75,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | --- | --- |
 | Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
 | Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
-| Pretrained model | - |
+| Pretrained model | [Hugging Face](https://huggingface.co/de233/AnchorSplat-20x) |
 | Processed third-party datasets | - |
 | 3DGS-SR dataset | - |
 | Project page | - |
@@ -117,6 +118,10 @@ If CUDA extension packages fail to install from `requirements.txt`, install vers
 AnchorSplat includes a lightweight inference path for Gaussian PLY files exported by LGM-style or Trellis-style pipelines.
 
 Place the downloaded checkpoint at `checkpoints/anchorsplat_20x.pth`, or set `WEIGHTS` to a custom path.
+
+```bash
+huggingface-cli download de233/AnchorSplat-20x anchorsplat_20x.pth --local-dir checkpoints
+```
 
 ```bash
 WEIGHTS=checkpoints/anchorsplat_20x.pth \
