@@ -1,12 +1,43 @@
-# AnchorSplat: Fast and Structure Consistent Detail Synthesis for Gaussian Splatting (ECCV 2026)
+<p align="center">
+  <img src="docs/assets/anchorsplat_banner.png" alt="AnchorSplat title image" width="100%">
+</p>
 
-✨ **ECCV 2026 Code Release** · ⚡ **Fast** · 🌍 **Generalizable** · 🔌 **Plug-and-Play**
+<h1 align="center">AnchorSplat: Fast and Structure Consistent Detail Synthesis for Gaussian Splatting</h1>
 
-[![Paper](https://img.shields.io/badge/Paper-PDF-b31b1b?logo=adobeacrobatreader&logoColor=white)](https://github.com/zhude233/AnchorSplat/blob/main/docs/AnchorSplat_ECCV2026.pdf)
-[![Code](https://img.shields.io/badge/Code-GitHub-black?logo=github)](https://github.com/zhude233/AnchorSplat)
-[![Model](https://img.shields.io/badge/Model-coming%20soon-yellow?logo=huggingface)](#-resources)
-[![Data](https://img.shields.io/badge/Data-coming%20soon-blue?logo=huggingface)](#-resources)
-[![Project Page](https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome)](#-resources)
+<h3 align="center">ECCV 2026</h3>
+
+<p align="center">
+  <strong>Dexu Zhu</strong><sup>1,*</sup>,
+  <strong>Jiangnan Shao</strong><sup>1,2,3,*</sup>,
+  <strong>Xiaofeng Wang</strong><sup>2,4</sup>,
+  <strong>Junxian Duan</strong><sup>1</sup>,
+  <strong>Jie Cao</strong><sup>1,†</sup>,
+  <strong>Zheng Zhu</strong><sup>2</sup>,
+  <strong>Huaibo Huang</strong><sup>1</sup>
+</p>
+
+<p align="center">
+  <sup>1</sup>MAIS&amp;NLPR, CASIA &nbsp;&nbsp;
+  <sup>2</sup>GigaAI &nbsp;&nbsp;
+  <sup>3</sup>ShanghaiTech University &nbsp;&nbsp;
+  <sup>4</sup>Tsinghua University
+</p>
+
+<p align="center">
+  <sup>*</sup> Equal contribution &nbsp;&nbsp; <sup>†</sup> Corresponding author &nbsp;&nbsp; 📧 <a href="mailto:dexu.zhu@cripac.ia.ac.cn">dexu.zhu@cripac.ia.ac.cn</a>
+</p>
+
+<p align="center">
+  <strong>Fast</strong> · <strong>Generalizable</strong> · <strong>Plug-and-Play</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/zhude233/AnchorSplat/blob/main/docs/AnchorSplat_ECCV2026.pdf"><img src="https://img.shields.io/badge/Paper-PDF-b31b1b?logo=adobeacrobatreader&logoColor=white" alt="Paper"></a>
+  <a href="https://github.com/zhude233/AnchorSplat"><img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"></a>
+  <a href="#-resources"><img src="https://img.shields.io/badge/Model-coming%20soon-yellow?logo=huggingface" alt="Model"></a>
+  <a href="#-resources"><img src="https://img.shields.io/badge/Data-coming%20soon-blue?logo=huggingface" alt="Data"></a>
+  <a href="#-resources"><img src="https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome" alt="Project Page"></a>
+</p>
 
 Official code release for **AnchorSplat**.
 

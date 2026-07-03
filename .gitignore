@@ -47,6 +47,9 @@ low_psnr_images/
 
 # Project page draft assets are kept local until the page is ready.
 docs/assets/
+!docs/assets/
+docs/assets/*
+!docs/assets/anchorsplat_banner.png
 docs/index.html
 docs/PROJECT_PAGE.md
 docs/.nojekyll
