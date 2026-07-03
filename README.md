@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/anchorsplat_readme_banner.png" alt="AnchorSplat title image" width="100%">
+  <img src="docs/assets/anchorsplat_readme_banner_v2.png" alt="AnchorSplat title image" width="100%">
 </p>
 
 <h1 align="center">Fast and Structure Consistent Detail Synthesis for Gaussian Splatting</h1>

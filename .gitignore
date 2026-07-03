@@ -49,7 +49,7 @@ low_psnr_images/
 docs/assets/
 !docs/assets/
 docs/assets/*
-!docs/assets/anchorsplat_readme_banner.png
+!docs/assets/anchorsplat_readme_banner_v2.png
 docs/index.html
 docs/PROJECT_PAGE.md
 docs/.nojekyll
