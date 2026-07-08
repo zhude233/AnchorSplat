@@ -69,6 +69,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | --- | --- |
 | Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
 | Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
+| Hugging Face Paper | [Paper Page](https://huggingface.co/papers/2607.01290) |
 | Pretrained models | [Hugging Face](https://huggingface.co/de233/AnchorSplat) |
 | Processed third-party datasets (MVImgNet, NeRF-Synthetic) | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data) |
 | 3DGS-SR dataset | - |
