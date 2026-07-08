@@ -36,7 +36,7 @@
   <a href="https://github.com/zhude233/AnchorSplat"><img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"></a>
   <a href="https://huggingface.co/de233/AnchorSplat"><img src="https://img.shields.io/badge/Model-Hugging%20Face-yellow?logo=huggingface" alt="Model"></a>
   <a href="https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data"><img src="https://img.shields.io/badge/Data-Hugging%20Face-blue?logo=huggingface" alt="Data"></a>
-  <a href="#-resources"><img src="https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome" alt="Project Page"></a>
+  <a href="https://huggingface.co/papers/2607.01290"><img src="https://img.shields.io/badge/HF%20Paper-Vote-yellow?logo=huggingface" alt="Hugging Face Paper"></a>
 </p>
 
 Official code release for **AnchorSplat**.
