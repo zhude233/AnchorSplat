@@ -35,7 +35,8 @@
   <a href="https://arxiv.org/abs/2607.01290"><img src="https://img.shields.io/badge/arXiv-2607.01290-b31b1b?logo=arxiv&logoColor=white" alt="arXiv"></a>
   <a href="https://github.com/zhude233/AnchorSplat"><img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"></a>
   <a href="https://huggingface.co/de233/AnchorSplat"><img src="https://img.shields.io/badge/Model-Hugging%20Face-yellow?logo=huggingface" alt="Model"></a>
-  <a href="https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data"><img src="https://img.shields.io/badge/Data-Hugging%20Face-blue?logo=huggingface" alt="Data"></a>
+  <a href="https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Train-15K"><img src="https://img.shields.io/badge/Data-3DGS--SR-blue?logo=huggingface" alt="3DGS-SR Data"></a>
+  <a href="https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data"><img src="https://img.shields.io/badge/Data-Third--Party-blue?logo=huggingface" alt="Third-Party Data"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome" alt="Project Page"></a>
 </p>
 
@@ -51,6 +52,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ **2026-07-02**: Release paper PDF.
 - ✅ **2026-07-03**: Release pretrained models.
 - ✅ **2026-07-03**: Release processed third-party datasets (MVImgNet, NeRF-Synthetic).
+- ✅ **2026-07-10**: Release 3DGS-SR training dataset.
 
 ## 📌 Release TODO
 
@@ -60,7 +62,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ Release paper PDF
 - ✅ Release pretrained models
 - ✅ Release processed third-party datasets (MVImgNet, NeRF-Synthetic)
-- ⬜ Release 3DGS-SR dataset
+- ✅ Release 3DGS-SR dataset
 - ⬜ Release project page
 
 ## 🔗 Resources
@@ -71,7 +73,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
 | Pretrained models | [Hugging Face](https://huggingface.co/de233/AnchorSplat) |
 | Processed third-party datasets (MVImgNet, NeRF-Synthetic) | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data) |
-| 3DGS-SR dataset | - |
+| 3DGS-SR training dataset | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Train-15K) |
 | Project page | - |
 
 ## ✨ Highlights
@@ -314,6 +316,36 @@ GaussianSceneDataset.high_resolution = 1024
 GaussianSceneDataset.input_ckpt_step = 14999
 train_dataset/GaussianSceneDataset.dataset_folder = 'data/3dgs-sr/train'
 test_dataset/GaussianSceneDataset.dataset_folder = 'data/3dgs-sr/test'
+```
+
+### 3DGS-SR Train 15K
+
+The released 3DGS-SR training set contains 14,525 scenes and is split into 54 independent tar+zstd parts. Each part can be downloaded and extracted separately.
+
+```bash
+mkdir -p data/downloads/3dgs-sr-train-15k
+
+huggingface-cli download de233/AnchorSplat-3DGS-SR-Train-15K \
+  --repo-type dataset \
+  --local-dir data/downloads/3dgs-sr-train-15k
+```
+
+Verify the archives:
+
+```bash
+cd data/downloads/3dgs-sr-train-15k
+sha256sum -c SHA256SUMS.txt
+cd -
+```
+
+Extract to the default training path:
+
+```bash
+mkdir -p data
+
+for f in data/downloads/3dgs-sr-train-15k/parts/3dgs_sr_train_15k_part_*.tar.zst; do
+  tar --zstd -xf "$f" -C data
+done
 ```
 
 ## 🏋️ Training
