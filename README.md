@@ -33,6 +33,7 @@
 
 <p align="center">
   <a href="https://arxiv.org/abs/2607.01290"><img src="https://img.shields.io/badge/arXiv-2607.01290-b31b1b?logo=arxiv&logoColor=white" alt="arXiv"></a>
+  <a href="https://huggingface.co/papers/2607.01290"><img src="https://img.shields.io/badge/HF%20Paper-Vote-yellow?logo=huggingface" alt="Hugging Face Paper"></a>
   <a href="https://github.com/zhude233/AnchorSplat"><img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"></a>
   <a href="https://huggingface.co/de233/AnchorSplat"><img src="https://img.shields.io/badge/Model-Hugging%20Face-yellow?logo=huggingface" alt="Model"></a>
   <a href="https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Train-15K"><img src="https://img.shields.io/badge/Data-3DGS--SR-blue?logo=huggingface" alt="3DGS-SR Data"></a>
@@ -71,6 +72,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | --- | --- |
 | Code | [GitHub](https://github.com/zhude233/AnchorSplat) |
 | Paper | [arXiv](https://arxiv.org/abs/2607.01290) |
+| Hugging Face Paper | [Paper Page](https://huggingface.co/papers/2607.01290) |
 | Pretrained models | [Hugging Face](https://huggingface.co/de233/AnchorSplat) |
 | Processed third-party datasets (MVImgNet, NeRF-Synthetic) | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data) |
 | 3DGS-SR training dataset | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Train-15K) |
