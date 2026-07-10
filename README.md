@@ -36,7 +36,8 @@
   <a href="https://huggingface.co/papers/2607.01290"><img src="https://img.shields.io/badge/HF%20Paper-Vote-yellow?logo=huggingface" alt="Hugging Face Paper"></a>
   <a href="https://github.com/zhude233/AnchorSplat"><img src="https://img.shields.io/badge/Code-GitHub-black?logo=github" alt="Code"></a>
   <a href="https://huggingface.co/de233/AnchorSplat"><img src="https://img.shields.io/badge/Model-Hugging%20Face-yellow?logo=huggingface" alt="Model"></a>
-  <a href="https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Train-15K"><img src="https://img.shields.io/badge/Data-3DGS--SR-blue?logo=huggingface" alt="3DGS-SR Data"></a>
+  <a href="https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Train-15K"><img src="https://img.shields.io/badge/Data-3DGS--SR%20Train-blue?logo=huggingface" alt="3DGS-SR Train Data"></a>
+  <a href="https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Test-30"><img src="https://img.shields.io/badge/Data-3DGS--SR%20Test-blue?logo=huggingface" alt="3DGS-SR Test Data"></a>
   <a href="https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data"><img src="https://img.shields.io/badge/Data-Third--Party-blue?logo=huggingface" alt="Third-Party Data"></a>
   <a href="#-resources"><img src="https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome" alt="Project Page"></a>
 </p>
@@ -54,6 +55,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ **2026-07-03**: Release pretrained models.
 - ✅ **2026-07-03**: Release processed third-party datasets (MVImgNet, NeRF-Synthetic).
 - ✅ **2026-07-10**: Release 3DGS-SR training dataset.
+- ✅ **2026-07-10**: Release 3DGS-SR test set.
 
 ## 📌 Release TODO
 
@@ -63,7 +65,8 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ Release paper PDF
 - ✅ Release pretrained models
 - ✅ Release processed third-party datasets (MVImgNet, NeRF-Synthetic)
-- ✅ Release 3DGS-SR dataset
+- ✅ Release 3DGS-SR training dataset
+- ✅ Release 3DGS-SR test set
 - ⬜ Release project page
 
 ## 🔗 Resources
@@ -76,6 +79,7 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | Pretrained models | [Hugging Face](https://huggingface.co/de233/AnchorSplat) |
 | Processed third-party datasets (MVImgNet, NeRF-Synthetic) | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data) |
 | 3DGS-SR training dataset | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Train-15K) |
+| 3DGS-SR test set | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Test-30) |
 | Project page | - |
 
 ## ✨ Highlights
@@ -381,6 +385,31 @@ for f in data/downloads/3dgs-sr-train-15k/parts/3dgs_sr_train_15k_part_*.tar.zst
 done
 ```
 
+### 3DGS-SR Test 30
+
+The released 3DGS-SR test set contains the 30 scenes used for AnchorSplat evaluation. It includes low-resolution 3DGS inputs, COLMAP camera files, and 1024-resolution target views for metrics.
+
+```bash
+mkdir -p data/downloads/3dgs-sr-test-30
+
+huggingface-cli download de233/AnchorSplat-3DGS-SR-Test-30 \
+  --repo-type dataset \
+  --local-dir data/downloads/3dgs-sr-test-30
+```
+
+Verify and extract:
+
+```bash
+cd data/downloads/3dgs-sr-test-30
+sha256sum -c SHA256SUMS.txt
+cd -
+
+mkdir -p data
+tar --zstd -xf data/downloads/3dgs-sr-test-30/parts/3dgs_sr_test_30.tar.zst -C data
+```
+
+After extraction, the default evaluation path is `data/3dgs-sr/test`.
+
 ## 🏋️ Training
 
 The main training script is DDP-based. The default script launches 8 processes:
@@ -414,19 +443,31 @@ python train.py --disable_wandb=false ...
 
 ## 📊 Evaluation
 
-Evaluation requires the processed test set under `data/3dgs-sr/test` or a custom path set through Gin. Run evaluation with the matching checkpoint and multiply factor:
+Evaluation requires the processed test set under `data/3dgs-sr/test`, or set `TEST_DATA_DIR` to a custom extracted path. Run evaluation with the matching checkpoint and multiply factor:
 
 ```bash
 CHECKPOINT=checkpoints/anchorsplat_20x.pth \
-GPUS=0 NPROC=1 \
+TEST_DATA_DIR=data/3dgs-sr/test \
+GPUS=0 NPROC=1 OUTPUT_DIR=outputs/eval_3dgs_sr_test30_20x \
 bash scripts/evaluate_anchorsplat.sh
 
 POINT_MULTIPLY_FACTOR=1 CHECKPOINT=checkpoints/anchorsplat_1x.pth \
-GPUS=0 NPROC=1 OUTPUT_DIR=outputs/eval_anchorsplat_1x \
+TEST_DATA_DIR=data/3dgs-sr/test \
+GPUS=0 NPROC=1 OUTPUT_DIR=outputs/eval_3dgs_sr_test30_1x \
 bash scripts/evaluate_anchorsplat.sh
 ```
 
 Outputs are written under `outputs/` and include rendered comparisons, per-rank metric files, and an evaluation log.
+
+Verified metrics on the released 30-scene 3DGS-SR test set:
+
+| Method | PSNR | SSIM | LPIPS |
+| --- | ---: | ---: | ---: |
+| 3DGS input | 31.04 | 0.917 | 0.077 |
+| AnchorSplat-1x | 36.42 | 0.944 | 0.064 |
+| AnchorSplat-20x | 36.51 | 0.944 | 0.055 |
+
+The paper table reports the ECCV 2026 submission numbers. Small last-digit differences can appear across CUDA/gsplat environments and release packaging.
 
 ### MVImgNet Zero-Shot Evaluation
 
