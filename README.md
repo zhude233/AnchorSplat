@@ -276,6 +276,37 @@ log_scales_out = scales_norm_out - log(s)
 
 The output PLY is written back in the same coordinate frame as the input.
 
+### Convert External Inputs To AnchorSplat Distribution
+
+Use `tools/convert_external_ply_to_anchorsplat_input.py` to inspect or export the exact normalized input seen by AnchorSplat.
+For standard end-to-end inference, pass the original PLY to `inference_external.py`; this converter is for debugging, inspecting input statistics, or custom pipelines that call `FeaturePredictor` directly.
+
+For a real scene reconstructed from captured images with COLMAP and trained as a standard 3DGS scene, pass the exported `point_cloud.ply` and use bbox normalization:
+
+```bash
+python tools/convert_external_ply_to_anchorsplat_input.py \
+  --input-ply /path/to/3dgs/output/point_cloud/iteration_30000/point_cloud.ply \
+  --source-format inria \
+  --normalization bbox \
+  --output-ply outputs/real_scene_anchorsplat_input.ply \
+  --output-pt outputs/real_scene_anchorsplat_input.pt \
+  --metadata-json outputs/real_scene_anchorsplat_input.json
+```
+
+For Trellis Gaussian outputs:
+
+```bash
+python tools/convert_external_ply_to_anchorsplat_input.py \
+  --input-ply /path/to/trellis_output.ply \
+  --source-format trellis \
+  --normalization auto \
+  --output-ply outputs/trellis_anchorsplat_input.ply \
+  --output-pt outputs/trellis_anchorsplat_input.pt \
+  --metadata-json outputs/trellis_anchorsplat_input.json
+```
+
+The `.pt` file contains normalized tensors ready for `FeaturePredictor`. The `.json` file records the selected mode, scalar `scale`, `translation`, and the inverse formula for restoring generated Gaussians to the original coordinate frame.
+
 ### Demo Check
 
 ```bash
@@ -482,6 +513,7 @@ Use this non-sparse package for the NeRF-Synthetic setting. Sparse or bicubic Ne
 The `tools/` directory contains helper scripts used during internal data conversion and low-resolution 3DGS preparation:
 
 - `tools/convert_3dgs_ply_to_gsplat_ckpt.py`
+- `tools/convert_external_ply_to_anchorsplat_input.py`
 - `tools/prepare_mvimgnet_layout.py`
 - `tools/train_mvimgnet_3dgs.sh`
 - `tools/prepare_mvimgnet_lowres_3dgs.py`
