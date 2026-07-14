@@ -50,7 +50,6 @@ docs/assets/
 !docs/assets/
 docs/assets/*
 !docs/assets/anchorsplat_readme_banner_v2.png
-docs/index.html
 docs/PROJECT_PAGE.md
 docs/.nojekyll
 docs/robots.txt

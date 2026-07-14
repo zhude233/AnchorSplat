@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="AnchorSplat is a fast, source-free, 3D-native detail synthesis method for Gaussian Splatting."
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <title>AnchorSplat | Fast 3D-native Gaussian Splatting Enhancement</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="AnchorSplat home">
+        <span class="wordmark-mark" aria-hidden="true"></span>
+        AnchorSplat
+      </a>
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="#results">Results</a>
+        <a href="#method">Method</a>
+        <a href="#benchmark">Benchmark</a>
+      </nav>
+      <div class="header-actions">
+        <a class="icon-link" href="https://arxiv.org/abs/2607.01290" aria-label="Read the paper" title="Paper">
+          <i data-lucide="file-text"></i>
+        </a>
+        <a class="button button-dark button-small" href="https://github.com/zhude233/AnchorSplat">
+          <i data-lucide="github"></i>
+          <span>Code</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <div class="brand-image-wrap">
+            <img
+              class="brand-image"
+              src="assets/anchorsplat_readme_banner_v2.png"
+              alt="AnchorSplat: 3D-native, structure-consistent, and one hundred thousand times faster"
+            />
+          </div>
+
+          <h1 id="hero-title">Fast and Structure Consistent Detail Synthesis for Gaussian Splatting</h1>
+
+          <p class="publication-venue">ECCV 2026</p>
+
+          <p class="authors">
+            <span>Dexu Zhu<sup>1,*</sup></span>
+            <span>Jiangnan Shao<sup>1,2,3,*</sup></span>
+            <span>Xiaofeng Wang<sup>2,4</sup></span>
+            <span>Junxian Duan<sup>1</sup></span>
+            <span>Jie Cao<sup>1,†</sup></span>
+            <span>Zheng Zhu<sup>2</sup></span>
+            <span>Huaibo Huang<sup>1</sup></span>
+          </p>
+
+          <p class="affiliations">
+            <span><sup>1</sup> MAIS&amp;NLPR, CASIA</span>
+            <span><sup>2</sup> GigaAI</span>
+            <span><sup>3</sup> ShanghaiTech University</span>
+            <span><sup>4</sup> Tsinghua University</span>
+          </p>
+
+          <p class="paper-meta">
+            <small><sup>*</sup> Equal contribution &nbsp; <sup>†</sup> Corresponding author</small>
+          </p>
+
+          <div class="hero-actions" aria-label="Project resources">
+            <a class="button button-dark" href="https://arxiv.org/abs/2607.01290">
+              <i data-lucide="file-text"></i>
+              Paper
+            </a>
+            <a class="button button-light" href="https://github.com/zhude233/AnchorSplat">
+              <i data-lucide="github"></i>
+              Code
+            </a>
+            <a class="button button-light" href="https://huggingface.co/de233/AnchorSplat">
+              <span class="hf-icon" aria-hidden="true">HF</span>
+              Model
+            </a>
+            <a class="button button-light" href="https://huggingface.co/papers/2607.01290">
+              <i data-lucide="arrow-up"></i>
+              Vote
+            </a>
+          </div>
+        </div>
+
+        <div class="comparison-shell" aria-label="Input and AnchorSplat result comparison">
+          <div class="comparison-stage" data-comparison>
+            <div class="comparison-layer comparison-input">
+              <div class="placeholder-art placeholder-soft" aria-hidden="true">
+                <span class="shape shape-a"></span>
+                <span class="shape shape-b"></span>
+                <span class="shape shape-c"></span>
+              </div>
+              <span class="media-label media-label-left">Input 3DGS</span>
+            </div>
+            <div class="comparison-layer comparison-output" data-output-layer>
+              <div class="placeholder-art placeholder-detailed" aria-hidden="true">
+                <span class="shape shape-a"></span>
+                <span class="shape shape-b"></span>
+                <span class="shape shape-c"></span>
+              </div>
+              <span class="media-label media-label-right">AnchorSplat</span>
+            </div>
+            <div class="comparison-divider" data-divider aria-hidden="true">
+              <span><i data-lucide="chevrons-left-right"></i></span>
+            </div>
+            <input
+              class="comparison-range"
+              type="range"
+              min="5"
+              max="95"
+              value="50"
+              aria-label="Reveal AnchorSplat output"
+            />
+          </div>
+          <div class="comparison-caption">
+            <span>One asset in. Rich detail out.</span>
+            <span class="caption-meta">Single forward pass</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats-strip" aria-label="AnchorSplat highlights">
+        <div class="stat">
+          <strong>~0.01s</strong>
+          <span>per asset</span>
+        </div>
+        <div class="stat">
+          <strong>10<sup>5</sup>x</strong>
+          <span>faster throughput</span>
+        </div>
+        <div class="stat">
+          <strong>Source-free</strong>
+          <span>no original views</span>
+        </div>
+        <div class="stat">
+          <strong>3D-native</strong>
+          <span>structure consistent</span>
+        </div>
+      </section>
+
+      <section class="paradigm-section section" aria-labelledby="paradigm-title">
+        <div class="section-heading">
+          <span class="eyebrow">A different path</span>
+          <h2 id="paradigm-title">Skip the 2D detour.</h2>
+          <p>AnchorSplat enhances Gaussian primitives directly in 3D, replacing minutes of rendering and optimization with one network pass.</p>
+        </div>
+
+        <div class="pipeline-board">
+          <div class="pipeline-row pipeline-old">
+            <span class="pipeline-name">2D-centric</span>
+            <div class="pipeline-flow">
+              <span class="pipeline-node">LR 3DGS</span>
+              <i data-lucide="arrow-right"></i>
+              <span class="pipeline-node">Render</span>
+              <i data-lucide="arrow-right"></i>
+              <span class="pipeline-node">2D SR</span>
+              <i data-lucide="arrow-right"></i>
+              <span class="pipeline-node">Re-optimize</span>
+              <i data-lucide="arrow-right"></i>
+              <span class="pipeline-node">HR 3DGS</span>
+            </div>
+            <span class="pipeline-time">0.3-1h</span>
+          </div>
+          <div class="pipeline-row pipeline-new">
+            <span class="pipeline-name">AnchorSplat</span>
+            <div class="pipeline-flow">
+              <span class="pipeline-node">LR 3DGS</span>
+              <i data-lucide="arrow-right"></i>
+              <span class="pipeline-node pipeline-node-accent">Single-pass 3D enhancement</span>
+              <i data-lucide="arrow-right"></i>
+              <span class="pipeline-node">HR 3DGS</span>
+            </div>
+            <span class="pipeline-time">~0.01s</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="results" class="results-section section" aria-labelledby="results-title">
+        <div class="section-heading section-heading-row">
+          <div>
+            <span class="eyebrow">Visual results</span>
+            <h2 id="results-title">Details that stay anchored.</h2>
+          </div>
+          <p>Browse benchmark scenes, generative assets, and noisy real-world captures. The final media will stay synchronized across every comparison.</p>
+        </div>
+
+        <div class="results-browser">
+          <div class="result-tabs" role="tablist" aria-label="Result categories">
+            <button class="result-tab is-active" type="button" role="tab" aria-selected="true" data-scene="benchmark">3DGS-SR</button>
+            <button class="result-tab" type="button" role="tab" aria-selected="false" data-scene="trellis">TRELLIS</button>
+            <button class="result-tab" type="button" role="tab" aria-selected="false" data-scene="lgm">LGM</button>
+            <button class="result-tab" type="button" role="tab" aria-selected="false" data-scene="realworld">Real-world</button>
+          </div>
+
+          <div class="result-stage" data-result-stage data-scene-name="3DGS-SR Benchmark">
+            <div class="result-placeholder" aria-hidden="true">
+              <span class="result-grid-line line-one"></span>
+              <span class="result-grid-line line-two"></span>
+              <span class="result-focus-box"></span>
+            </div>
+            <div class="result-stage-topline">
+              <span data-scene-label>3DGS-SR Benchmark</span>
+              <span>Input / Ours / Ground Truth</span>
+            </div>
+            <div class="media-slot-label">
+              <i data-lucide="play"></i>
+              <span>Comparison media</span>
+            </div>
+          </div>
+
+          <div class="result-notes">
+            <p data-scene-description>Fine texture recovery with structure-consistent edges on the held-out 3DGS-SR benchmark.</p>
+            <div class="result-controls" aria-label="Result media controls">
+              <button class="icon-button" type="button" aria-label="Previous scene" title="Previous scene">
+                <i data-lucide="arrow-left"></i>
+              </button>
+              <span data-scene-index>01 / 04</span>
+              <button class="icon-button" type="button" aria-label="Next scene" title="Next scene">
+                <i data-lucide="arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="method" class="method-section section" aria-labelledby="method-title">
+        <div class="section-heading">
+          <span class="eyebrow">Method</span>
+          <h2 id="method-title">From coarse Gaussians to dense detail.</h2>
+          <p>The architecture keeps the valid input geometry as its foundation, then predicts local detail without iterative scene optimization.</p>
+        </div>
+
+        <div class="method-steps">
+          <article class="method-step">
+            <span class="step-number">01</span>
+            <i data-lucide="scan-search"></i>
+            <h3>Encode primitives</h3>
+            <p>Model the input 3DGS as an attribute-rich point cloud and aggregate local context with a point encoder.</p>
+          </article>
+          <article class="method-step">
+            <span class="step-number">02</span>
+            <i data-lucide="box-select"></i>
+            <h3>Anchor locally</h3>
+            <p>Constrain generated primitives to the neighborhood of each input Gaussian to preserve reliable structure.</p>
+          </article>
+          <article class="method-step">
+            <span class="step-number">03</span>
+            <i data-lucide="sparkles"></i>
+            <h3>Densify once</h3>
+            <p>Generate controlled primitive multiplicities and learned opacity in one feed-forward pass.</p>
+          </article>
+        </div>
+
+        <div class="method-figure-placeholder">
+          <div class="figure-rail">
+            <span>LR 3DGS</span>
+            <i data-lucide="arrow-right"></i>
+            <span>Feature encoder</span>
+            <i data-lucide="arrow-right"></i>
+            <span>Point anchors</span>
+            <i data-lucide="arrow-right"></i>
+            <span>20x primitives</span>
+            <i data-lucide="arrow-right"></i>
+            <span>HR 3DGS</span>
+          </div>
+          <span class="figure-label">Method figure</span>
+        </div>
+      </section>
+
+      <section id="benchmark" class="benchmark-section section" aria-labelledby="benchmark-title">
+        <div class="section-heading section-heading-row">
+          <div>
+            <span class="eyebrow">3DGS-SR benchmark</span>
+            <h2 id="benchmark-title">Quality without the wait.</h2>
+          </div>
+          <p>AnchorSplat reaches the strongest reported fidelity on 3DGS-SR while reducing per-scene processing from minutes to milliseconds.</p>
+        </div>
+
+        <div class="benchmark-layout">
+          <div class="metric-feature">
+            <span class="metric-kicker">Throughput</span>
+            <strong>~0.01<span>s</span></strong>
+            <div class="speed-scale" aria-label="Processing time comparison">
+              <div class="speed-row ours">
+                <span>AnchorSplat</span>
+                <span class="speed-bar"></span>
+                <b>0.01s</b>
+              </div>
+              <div class="speed-row">
+                <span>Bicubic</span>
+                <span class="speed-bar"></span>
+                <b>~4m</b>
+              </div>
+              <div class="speed-row">
+                <span>SRGS</span>
+                <span class="speed-bar"></span>
+                <b>~16m</b>
+              </div>
+              <div class="speed-row">
+                <span>SuperGaussian</span>
+                <span class="speed-bar"></span>
+                <b>~41m</b>
+              </div>
+            </div>
+          </div>
+
+          <div class="metric-list">
+            <div class="metric-row">
+              <span>PSNR</span>
+              <strong>36.57</strong>
+              <small>higher is better</small>
+            </div>
+            <div class="metric-row">
+              <span>SSIM</span>
+              <strong>0.943</strong>
+              <small>higher is better</small>
+            </div>
+            <div class="metric-row">
+              <span>LPIPS</span>
+              <strong>0.058</strong>
+              <small>lower is better</small>
+            </div>
+            <div class="metric-row">
+              <span>Output density</span>
+              <strong>20x</strong>
+              <small>primitives per anchor</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="resources-section section" aria-labelledby="resources-title">
+        <div class="resource-intro">
+          <span class="eyebrow">Open research</span>
+          <h2 id="resources-title">Use AnchorSplat.</h2>
+          <p>Code, pretrained checkpoints, processed evaluation data, and a runnable demo asset are available now.</p>
+        </div>
+        <div class="resource-links">
+          <a href="https://github.com/zhude233/AnchorSplat">
+            <i data-lucide="github"></i>
+            <span><small>Source</small>GitHub</span>
+            <i data-lucide="arrow-up-right"></i>
+          </a>
+          <a href="https://huggingface.co/de233/AnchorSplat">
+            <i data-lucide="package-open"></i>
+            <span><small>Checkpoints</small>Model Zoo</span>
+            <i data-lucide="arrow-up-right"></i>
+          </a>
+          <a href="https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data">
+            <i data-lucide="database"></i>
+            <span><small>Evaluation</small>Datasets</span>
+            <i data-lucide="arrow-up-right"></i>
+          </a>
+          <a href="mailto:dexu.zhu@cripac.ia.ac.cn">
+            <i data-lucide="mail"></i>
+            <span><small>Questions</small>Contact</span>
+            <i data-lucide="arrow-up-right"></i>
+          </a>
+        </div>
+      </section>
+
+      <section class="citation-section section" aria-labelledby="citation-title">
+        <div class="citation-heading">
+          <div>
+            <span class="eyebrow">Citation</span>
+            <h2 id="citation-title">Build on our work.</h2>
+          </div>
+          <button class="button button-light copy-button" type="button" data-copy-citation>
+            <i data-lucide="copy"></i>
+            <span>Copy BibTeX</span>
+          </button>
+        </div>
+        <pre><code data-citation>@article{zhu2026anchorsplat,
+  title   = {AnchorSplat: Fast and Structure Consistent Detail Synthesis for Gaussian Splatting},
+  author  = {Zhu, Dexu and Shao, Jiangnan and Wang, Xiaofeng and Duan, Junxian and Cao, Jie and Zhu, Zheng and Huang, Huaibo},
+  journal = {arXiv preprint arXiv:2607.01290},
+  year    = {2026}
+}</code></pre>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="wordmark" href="#top">
+        <span class="wordmark-mark" aria-hidden="true"></span>
+        AnchorSplat
+      </a>
+      <p>Fast and structure consistent detail synthesis for Gaussian Splatting.</p>
+      <span>ECCV 2026</span>
+    </footer>
+  </body>
+</html>
