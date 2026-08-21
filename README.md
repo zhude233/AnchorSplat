@@ -166,13 +166,25 @@ Important:
 
 The code is tested around PyTorch, CUDA extension packages, Pointcept, and gsplat. Exact wheels depend on your CUDA and PyTorch versions.
 
+Clone AnchorSplat together with its pinned Pointcept submodule:
+
+```bash
+git clone --recursive https://github.com/zhude233/AnchorSplat.git
+cd AnchorSplat
+```
+
+If you already cloned AnchorSplat, initialize the submodule from the repository root:
+
+```bash
+git submodule update --init --recursive
+```
+
 ```bash
 conda env create -f environment.yml
 conda activate anchorsplat
 
-# Point Transformer V3 backbone.
-git clone https://github.com/Pointcept/Pointcept.git third_party/Pointcept
-pip install -e third_party/Pointcept
+# Install the pinned SplatFormer-compatible Pointcept package.
+python -m pip install third_party/Pointcept
 ```
 
 If you prefer a manual installation:
@@ -183,9 +195,8 @@ conda activate anchorsplat
 pip install torch==2.1.2 torchvision==0.16.2 --index-url https://download.pytorch.org/whl/cu118
 pip install -r requirements.txt
 
-# Point Transformer V3 backbone.
-git clone https://github.com/Pointcept/Pointcept.git third_party/Pointcept
-pip install -e third_party/Pointcept
+# Install the pinned SplatFormer-compatible Pointcept package.
+python -m pip install third_party/Pointcept
 ```
 
 If CUDA extension packages fail to install from `requirements.txt`, install versions that match your local PyTorch/CUDA build:
