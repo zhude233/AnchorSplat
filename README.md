@@ -600,10 +600,12 @@ This repository is released under the MIT License. Third-party dependencies and 
 If you find AnchorSplat useful for your research, please consider citing:
 
 ```bibtex
-@article{zhu2026anchorsplat,
+@inproceedings{zhu2026anchorsplat,
   title={AnchorSplat: Fast and Structure Consistent Detail Synthesis for Gaussian Splatting},
   author={Zhu, Dexu and Shao, Jiangnan and Wang, Xiaofeng and Duan, Junxian and Cao, Jie and Zhu, Zheng and Huang, Huaibo},
-  journal={arXiv preprint arXiv:2607.01290},
-  year={2026}
+  booktitle={European Conference on Computer Vision},
+  pages={173--189},
+  year={2026},
+  organization={Springer}
 }
 ```
