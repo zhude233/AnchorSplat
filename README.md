@@ -39,7 +39,6 @@
   <a href="https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Train-15K"><img src="https://img.shields.io/badge/Data-3DGS--SR%20Train-blue?logo=huggingface" alt="3DGS-SR Train Data"></a>
   <a href="https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Test-30"><img src="https://img.shields.io/badge/Data-3DGS--SR%20Test-blue?logo=huggingface" alt="3DGS-SR Test Data"></a>
   <a href="https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data"><img src="https://img.shields.io/badge/Data-Third--Party-blue?logo=huggingface" alt="Third-Party Data"></a>
-  <a href="#-resources"><img src="https://img.shields.io/badge/Project%20Page-coming%20soon-green?logo=googlechrome" alt="Project Page"></a>
 </p>
 
 Official code release for **AnchorSplat**.
@@ -67,7 +66,6 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 - ✅ Release processed third-party datasets (MVImgNet, NeRF-Synthetic)
 - ✅ Release 3DGS-SR training dataset
 - ✅ Release 3DGS-SR test set
-- ⬜ Release project page
 
 ## 🔗 Resources
 
@@ -80,7 +78,6 @@ AnchorSplat is a fast, generalizable, and plug-and-play method for enhancing low
 | Processed third-party datasets (MVImgNet, NeRF-Synthetic) | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-Processed-Third-Party-Data) |
 | 3DGS-SR training dataset | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Train-15K) |
 | 3DGS-SR test set | [Hugging Face](https://huggingface.co/datasets/de233/AnchorSplat-3DGS-SR-Test-30) |
-| Project page | - |
 
 ## ✨ Highlights
 
